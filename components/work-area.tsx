@@ -347,8 +347,9 @@ export function WorkArea() {
   const { type: currentTabType, treeName: currentTreeName } = getCurrentTabInfo()
 
   return (
-    <div className="flex-1 flex flex-col">
-      <Tabs value={activeTab} className="flex-1 flex flex-col" onValueChange={setActiveTab}>
+    <div className="flex-1 flex flex-col h-full overflow-hidden">
+      <Tabs value={activeTab} className="flex-1 flex flex-col h-full" onValueChange={setActiveTab}>
+        {/* 标签页头部 - 固定不滚动 */}
         <div className="border-b flex items-center w-full" ref={tabContainerRef}>
           {/* 使用flex-1让标签列表占据所有可用空间 */}
           <div className="flex-1 flex items-center justify-between">
@@ -455,17 +456,27 @@ export function WorkArea() {
           </div>
         </div>
 
-        {tabs.map((tab) => (
-          <TabsContent key={tab.id} value={tab.id} className="flex-1 relative data-[state=inactive]:hidden">
-            {tab.type === "gates" && <GatesTable />}
-            {tab.type === "basicEvents" && <BasicEventsTable />}
-            {tab.type === "houseEvents" && <HouseEventsTable />}
-            {tab.type === "faultTree" && <FaultTreeViewer xmlData={sampleXmlData} initialTreeName={tab.treeName} />}
-            {tab.type === "report" && <ReportViewer reportName={tab.label} />}
-          </TabsContent>
-        ))}
+        {/* 内容区域 - 可滚动 */}
+        <div className="flex-1 relative overflow-hidden">
+          {tabs.map((tab) => (
+            <TabsContent
+              key={tab.id}
+              value={tab.id}
+              className="absolute inset-0 data-[state=inactive]:hidden h-full overflow-hidden"
+            >
+              <div className="h-full overflow-auto thin-scrollbar">
+                {tab.type === "gates" && <GatesTable />}
+                {tab.type === "basicEvents" && <BasicEventsTable />}
+                {tab.type === "houseEvents" && <HouseEventsTable />}
+                {tab.type === "faultTree" && <FaultTreeViewer xmlData={sampleXmlData} initialTreeName={tab.treeName} />}
+                {tab.type === "report" && <ReportViewer reportName={tab.label} />}
+              </div>
+            </TabsContent>
+          ))}
+        </div>
       </Tabs>
 
+      {/* 底部状态栏 - 固定不滚动 */}
       <div className="h-6 border-t bg-muted/30 px-2 flex items-center text-xs text-muted-foreground">
         <span>
           当前视图:{" "}

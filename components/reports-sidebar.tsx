@@ -17,7 +17,9 @@ export function ReportsSidebar() {
   }, [collapsed])
 
   return (
-    <div className={`border-l bg-muted/20 transition-all ${collapsed ? "w-12" : "w-64"} flex flex-col`}>
+    <div
+      className={`border-l bg-muted/20 transition-all ${collapsed ? "w-12" : "w-64"} flex flex-col h-full overflow-hidden`}
+    >
       <div className="p-2 flex justify-between items-center border-b">
         <h2 className={`font-medium text-sm ${collapsed ? "hidden" : "block"}`}>报告列表</h2>
         <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="h-7 w-7">
@@ -26,7 +28,7 @@ export function ReportsSidebar() {
       </div>
 
       {!collapsed ? (
-        <div className="flex-1 overflow-auto p-2">
+        <div className="flex-1 overflow-y-auto p-2 thin-scrollbar">
           <div className="space-y-1">
             <Button
               variant="ghost"

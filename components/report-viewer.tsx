@@ -8,7 +8,7 @@ interface ReportViewerProps {
 
 export function ReportViewer({ reportName }: ReportViewerProps) {
   return (
-    <div className="p-4">
+    <div className="h-full w-full overflow-auto thin-scrollbar p-4">
       <Card>
         <CardHeader>
           <CardTitle>{reportName}</CardTitle>

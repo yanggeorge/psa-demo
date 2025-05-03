@@ -84,4 +84,26 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none; /* Chrome, Safari and Opera */
   }
+
+  .thin-scrollbar {
+    scrollbar-width: thin; /* Firefox */
+  }
+
+  .thin-scrollbar::-webkit-scrollbar {
+    width: 6px; /* Width of the vertical scrollbar */
+    height: 6px; /* Height of the horizontal scrollbar */
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* Track background */
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2); /* Thumb color */
+    border-radius: 4px; /* Rounded corners */
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3); /* Thumb color on hover */
+  }
 }

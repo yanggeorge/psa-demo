@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 
-// 示例XML数据
+// 示例XML数据 - 增加了更多的基本事件（B3到B20）
 const sampleXmlData = `<?xml version="1.0" encoding="UTF-8"?>
 <opsa-mef name="abc">
   <define-fault-tree name="Tree1">
@@ -50,6 +50,78 @@ const sampleXmlData = `<?xml version="1.0" encoding="UTF-8"?>
       <label>B2</label>
       <float value="0.1"/>
     </define-basic-event>
+    <define-basic-event name="B3">
+      <label>B3</label>
+      <float value="0.015"/>
+    </define-basic-event>
+    <define-basic-event name="B4">
+      <label>B4</label>
+      <float value="0.025"/>
+    </define-basic-event>
+    <define-basic-event name="B5">
+      <label>B5</label>
+      <float value="0.035"/>
+    </define-basic-event>
+    <define-basic-event name="B6">
+      <label>B6</label>
+      <float value="0.045"/>
+    </define-basic-event>
+    <define-basic-event name="B7">
+      <label>B7</label>
+      <float value="0.055"/>
+    </define-basic-event>
+    <define-basic-event name="B8">
+      <label>B8</label>
+      <float value="0.065"/>
+    </define-basic-event>
+    <define-basic-event name="B9">
+      <label>B9</label>
+      <float value="0.075"/>
+    </define-basic-event>
+    <define-basic-event name="B10">
+      <label>B10</label>
+      <float value="0.085"/>
+    </define-basic-event>
+    <define-basic-event name="B11">
+      <label>B11</label>
+      <float value="0.095"/>
+    </define-basic-event>
+    <define-basic-event name="B12">
+      <label>B12</label>
+      <float value="0.105"/>
+    </define-basic-event>
+    <define-basic-event name="B13">
+      <label>B13</label>
+      <float value="0.115"/>
+    </define-basic-event>
+    <define-basic-event name="B14">
+      <label>B14</label>
+      <float value="0.125"/>
+    </define-basic-event>
+    <define-basic-event name="B15">
+      <label>B15</label>
+      <float value="0.135"/>
+    </define-basic-event>
+    <define-basic-event name="B16">
+      <label>B16</label>
+      <float value="0.145"/>
+    </define-basic-event>
+    <define-basic-event name="B17">
+      <label>B17</label>
+      <float value="0.155"/>
+    </define-basic-event>
+    <define-basic-event name="B18">
+      <label>B18</label>
+      <float value="0.165"/>
+    </define-basic-event>
+    <define-basic-event name="B19">
+      <label>B19</label>
+      <float value="0.175"/>
+    </define-basic-event>
+    <define-basic-event name="B20">
+      <label>B20</label>
+      <float value="0.185"/>
+    </define-basic-event>
     <define-house-event name="House1">
       <label>House1</label>
       <constant value="true"/>
@@ -65,7 +137,7 @@ export function ModelElementsSidebar() {
   const [collapsed, setCollapsed] = useState(false)
   const [parsedData, setParsedData] = useState<any>(null)
   const [gatesExpanded, setGatesExpanded] = useState(false)
-  const [basicEventsExpanded, setBasicEventsExpanded] = useState(false)
+  const [basicEventsExpanded, setBasicEventsExpanded] = useState(true) // 默认展开基本事件
   const [houseEventsExpanded, setHouseEventsExpanded] = useState(false)
   const [filterText, setFilterText] = useState("")
   const [isNewTreeDialogOpen, setIsNewTreeDialogOpen] = useState(false)
@@ -152,7 +224,9 @@ export function ModelElementsSidebar() {
   const filteredHouseEvents = parsedData ? filterElements(parsedData.houseEvents) : []
 
   return (
-    <div className={`border-r bg-muted/20 transition-all ${collapsed ? "w-12" : "w-64"} flex flex-col`}>
+    <div
+      className={`border-r bg-muted/20 transition-all ${collapsed ? "w-12" : "w-64"} flex flex-col h-full overflow-hidden`}
+    >
       <div className="p-2 flex justify-between items-center border-b">
         <h2 className={`font-medium text-sm ${collapsed ? "hidden" : "block"}`}>模型元素</h2>
         <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="h-7 w-7">
@@ -175,7 +249,7 @@ export function ModelElementsSidebar() {
       )}
 
       {!collapsed ? (
-        <div className="flex-1 overflow-auto p-2">
+        <div className="flex-1 overflow-y-auto p-2 thin-scrollbar">
           <Collapsible defaultOpen className="mb-2">
             <div className="flex items-center justify-between">
               <CollapsibleTrigger className="flex items-center justify-between w-full p-2 text-sm hover:bg-muted rounded-md">

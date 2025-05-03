@@ -284,7 +284,7 @@ function FlowChart({
   }, [buildNodesAndEdges])
 
   return (
-    <div className="w-full h-full" ref={reactFlowWrapper}>
+    <div className="w-full h-full overflow-hidden">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -368,7 +368,7 @@ export function FaultTreeViewer({ xmlData, initialTreeName }: FaultTreeViewerPro
   }
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full overflow-auto thin-scrollbar">
       <ReactFlowProvider>
         <FlowChart tree={currentTree} parsedData={parsedData} onNodeClick={handleNodeClick} />
         {selectedNode && (

@@ -6,10 +6,10 @@ import { WorkArea } from "@/components/work-area"
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="h-screen w-screen flex flex-col overflow-hidden">
       <Menu />
       <Toolbar />
-      <div className="flex-1 flex">
+      <div className="flex-1 flex overflow-hidden">
         <ModelElementsSidebar />
         <WorkArea />
         <ReportsSidebar />
