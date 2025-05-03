@@ -81,6 +81,15 @@ export function ModelElementsSidebar() {
     }
   }, [])
 
+  // 当侧边栏状态改变时，发送自定义事件
+  useEffect(() => {
+    // 发送侧边栏状态变化事件
+    const event = new CustomEvent("leftSidebarToggle", {
+      detail: { collapsed },
+    })
+    window.dispatchEvent(event)
+  }, [collapsed])
+
   // 用于与WorkArea组件通信的函数
   const openElementTab = (elementType: string) => {
     // 创建一个自定义事件，传递要打开的元素类型
