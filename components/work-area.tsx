@@ -12,6 +12,12 @@ import { ReportViewer } from "./report-viewer"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ChevronDown, X } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Switch } from "@/components/ui/switch"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { parseXML } from "@/lib/xml-parser"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
 
 // 示例XML数据
 const sampleXmlData = `<?xml version="1.0" encoding="UTF-8"?>
@@ -86,6 +92,61 @@ export function WorkArea() {
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false)
   const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(true) // 默认右侧边栏是收起的
   const tabContainerRef = useRef<HTMLDivElement>(null)
+
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [editingElement, setEditingElement] = useState<{ type: string; id: string; data: any } | null>(null)
+
+  // Parse the sample XML data to get element data
+  const xmlData = useMemo(() => {
+    try {
+      return parseXML(sampleXmlData)
+    } catch (err) {
+      console.error("解析XML数据时出错:", err)
+      return { gates: [], basicEvents: [], houseEvents: [] }
+    }
+  }, [])
+
+  // Handle element edit requests
+  useEffect(() => {
+    const handleEditElement = (event: CustomEvent<{ elementType: string; elementId: string }>) => {
+      const { elementType, elementId } = event.detail
+
+      // Find element data based on type and ID
+      let elementData = null
+      if (elementType === "gates") {
+        elementData = xmlData.gates.find((gate) => gate.name === elementId)
+      } else if (elementType === "basicEvents") {
+        elementData = xmlData.basicEvents.find((event) => event.name === elementId)
+      } else if (elementType === "houseEvents") {
+        elementData = xmlData.houseEvents.find((event) => event.name === elementId)
+      }
+
+      if (elementData) {
+        setEditingElement({
+          type: elementType,
+          id: elementId,
+          data: elementData,
+        })
+        setIsEditDialogOpen(true)
+      }
+    }
+
+    window.addEventListener("editElement", handleEditElement as EventListener)
+
+    return () => {
+      window.removeEventListener("editElement", handleEditElement as EventListener)
+    }
+  }, [xmlData])
+
+  // Save edited element
+  const handleSaveEdit = () => {
+    // In a real application, you'd update the actual data or send changes to a server
+    console.log("Saving edited element:", editingElement)
+
+    // Close dialog and reset state
+    setIsEditDialogOpen(false)
+    setEditingElement(null)
+  }
 
   // 监听窗口大小变化
   useEffect(() => {
@@ -494,6 +555,128 @@ export function WorkArea() {
         </span>
         <span className="ml-auto">就绪</span>
       </div>
+
+      {/* Element Edit Dialog */}
+      {isEditDialogOpen && editingElement && (
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>
+                {editingElement.type === "gates"
+                  ? "编辑门"
+                  : editingElement.type === "basicEvents"
+                    ? "编辑基本事件"
+                    : "编辑房屋事件"}
+              </DialogTitle>
+            </DialogHeader>
+
+            <div className="grid gap-4 py-4">
+              {/* Common fields */}
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="element-id" className="text-right">
+                  ID
+                </Label>
+                <Input id="element-id" value={editingElement.id} className="col-span-3" disabled />
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="element-label" className="text-right">
+                  标签
+                </Label>
+                <Input
+                  id="element-label"
+                  value={editingElement.data.label || ""}
+                  className="col-span-3"
+                  onChange={(e) =>
+                    setEditingElement({
+                      ...editingElement,
+                      data: { ...editingElement.data, label: e.target.value },
+                    })
+                  }
+                />
+              </div>
+
+              {/* Gate specific fields */}
+              {editingElement.type === "gates" && (
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="element-type" className="text-right">
+                    类型
+                  </Label>
+                  <Select
+                    value={editingElement.data.type || ""}
+                    onValueChange={(value) =>
+                      setEditingElement({
+                        ...editingElement,
+                        data: { ...editingElement.data, type: value },
+                      })
+                    }
+                  >
+                    <SelectTrigger id="element-type" className="col-span-3">
+                      <SelectValue placeholder="选择门类型" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="and">AND</SelectItem>
+                      <SelectItem value="or">OR</SelectItem>
+                      <SelectItem value="xor">XOR</SelectItem>
+                      <SelectItem value="not">NOT</SelectItem>
+                      <SelectItem value="nand">NAND</SelectItem>
+                      <SelectItem value="nor">NOR</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {/* Basic event specific fields */}
+              {editingElement.type === "basicEvents" && (
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="element-probability" className="text-right">
+                    概率
+                  </Label>
+                  <Input
+                    id="element-probability"
+                    type="number"
+                    min="0"
+                    max="1"
+                    step="0.001"
+                    value={editingElement.data.probability || 0}
+                    className="col-span-3"
+                    onChange={(e) =>
+                      setEditingElement({
+                        ...editingElement,
+                        data: { ...editingElement.data, probability: Number(e.target.value) },
+                      })
+                    }
+                  />
+                </div>
+              )}
+
+              {/* House event specific fields */}
+              {editingElement.type === "houseEvents" && (
+                <div className="flex items-center space-x-2 pt-2 justify-end pr-2">
+                  <Switch
+                    id="element-state"
+                    checked={editingElement.data.state || false}
+                    onCheckedChange={(checked) =>
+                      setEditingElement({
+                        ...editingElement,
+                        data: { ...editingElement.data, state: checked },
+                      })
+                    }
+                  />
+                  <Label htmlFor="element-state">状态: {editingElement.data.state ? "TRUE" : "FALSE"}</Label>
+                </div>
+              )}
+            </div>
+
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                取消
+              </Button>
+              <Button onClick={handleSaveEdit}>保存</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   )
 }

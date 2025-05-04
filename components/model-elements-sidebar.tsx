@@ -140,6 +140,8 @@ export function ModelElementsSidebar() {
   const [basicEventsExpanded, setBasicEventsExpanded] = useState(true) // 默认展开基本事件
   const [houseEventsExpanded, setHouseEventsExpanded] = useState(false)
   const [filterText, setFilterText] = useState("")
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [editingElement, setEditingElement] = useState<any>(null)
   const [isNewTreeDialogOpen, setIsNewTreeDialogOpen] = useState(false)
   const [newTreeName, setNewTreeName] = useState("")
 
@@ -162,11 +164,20 @@ export function ModelElementsSidebar() {
     window.dispatchEvent(event)
   }, [collapsed])
 
-  // 用于与WorkArea组件通信的函数
+  // Update the openElementTab function to handle tab opening for different element types
   const openElementTab = (elementType: string) => {
-    // 创建一个自定义事件，传递要打开的元素类型
+    // Create a custom event to open the correct element type tab
     const event = new CustomEvent("openElementTab", {
       detail: { elementType },
+    })
+    window.dispatchEvent(event)
+  }
+
+  // Add a new function for double-click to edit specific elements
+  const editElement = (elementType: string, elementId: string) => {
+    // Create a custom event to open the edit dialog for specific element
+    const event = new CustomEvent("editElement", {
+      detail: { elementType, elementId },
     })
     window.dispatchEvent(event)
   }
@@ -308,6 +319,10 @@ export function ModelElementsSidebar() {
                     size="sm"
                     className="w-full justify-start text-xs h-7"
                     onClick={() => openElement("gates", gate.name)}
+                    onDoubleClick={() => {
+                      setEditingElement(gate)
+                      setEditDialogOpen(true)
+                    }}
                   >
                     <span className="truncate">{gate.name}</span>
                     <span className="ml-2 text-xs text-muted-foreground">({gate.type})</span>
@@ -339,6 +354,10 @@ export function ModelElementsSidebar() {
                     size="sm"
                     className="w-full justify-start text-xs h-7"
                     onClick={() => openElement("basicEvents", event.name)}
+                    onDoubleClick={() => {
+                      setEditingElement(event)
+                      setEditDialogOpen(true)
+                    }}
                   >
                     <span className="truncate">{event.name}</span>
                     <span className="ml-2 text-xs text-muted-foreground">({event.probability})</span>
@@ -370,6 +389,10 @@ export function ModelElementsSidebar() {
                     size="sm"
                     className="w-full justify-start text-xs h-7"
                     onClick={() => openElement("houseEvents", event.name)}
+                    onDoubleClick={() => {
+                      setEditingElement(event)
+                      setEditDialogOpen(true)
+                    }}
                   >
                     <span className="truncate">{event.name}</span>
                     <span className="ml-2 text-xs text-muted-foreground">({event.state ? "TRUE" : "FALSE"})</span>
@@ -381,16 +404,40 @@ export function ModelElementsSidebar() {
         </div>
       ) : (
         <div className="flex-1 flex flex-col items-center pt-2 space-y-4">
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openElementTab("faultTreeViewer")}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => openElementTab("faultTreeViewer")}
+            title="故障树列表"
+          >
             <Network className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openElementTab("gates")}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => openElementTab("gates")}
+            title="门列表"
+          >
             <Gate className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openElementTab("basicEvents")}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => openElementTab("basicEvents")}
+            title="基本事件列表"
+          >
             <Circle className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openElementTab("houseEvents")}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => openElementTab("houseEvents")}
+            title="房屋事件列表"
+          >
             <Home className="h-4 w-4" />
           </Button>
         </div>
@@ -424,6 +471,115 @@ export function ModelElementsSidebar() {
               确定
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* 编辑元素对话框 */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent>
+          {editingElement && (
+            <>
+              <DialogHeader>
+                <DialogTitle>
+                  {editingElement.type === "and" || editingElement.type === "or"
+                    ? "编辑门"
+                    : "probability" in editingElement
+                      ? "编辑基本事件"
+                      : "编辑房屋事件"}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="edit-id" className="text-right">
+                    ID
+                  </Label>
+                  <Input id="edit-id" value={editingElement.name || ""} className="col-span-3" readOnly />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="edit-label" className="text-right">
+                    标签
+                  </Label>
+                  <Input
+                    id="edit-label"
+                    value={editingElement.label || ""}
+                    onChange={(e) => setEditingElement({ ...editingElement, label: e.target.value })}
+                    className="col-span-3"
+                  />
+                </div>
+                {/* 门特有的字段 */}
+                {"type" in editingElement && (
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="edit-type" className="text-right">
+                      类型
+                    </Label>
+                    <select
+                      id="edit-type"
+                      value={editingElement.type}
+                      onChange={(e) => setEditingElement({ ...editingElement, type: e.target.value })}
+                      className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    >
+                      <option value="and">AND</option>
+                      <option value="or">OR</option>
+                      <option value="xor">XOR</option>
+                      <option value="not">NOT</option>
+                      <option value="nand">NAND</option>
+                      <option value="nor">NOR</option>
+                    </select>
+                  </div>
+                )}
+                {/* 基本事件特有的字段 */}
+                {"probability" in editingElement && (
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="edit-probability" className="text-right">
+                      概率
+                    </Label>
+                    <Input
+                      id="edit-probability"
+                      type="number"
+                      min="0"
+                      max="1"
+                      step="0.001"
+                      value={editingElement.probability}
+                      onChange={(e) =>
+                        setEditingElement({ ...editingElement, probability: Number.parseFloat(e.target.value) })
+                      }
+                      className="col-span-3"
+                    />
+                  </div>
+                )}
+                {/* 房屋事件特有的字段 */}
+                {"state" in editingElement && (
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="edit-state" className="text-right">
+                      状态
+                    </Label>
+                    <div className="col-span-3 flex items-center">
+                      <input
+                        id="edit-state"
+                        type="checkbox"
+                        checked={editingElement.state}
+                        onChange={(e) => setEditingElement({ ...editingElement, state: e.target.checked })}
+                        className="mr-2"
+                      />
+                      <span>{editingElement.state ? "TRUE" : "FALSE"}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
+                  取消
+                </Button>
+                <Button
+                  onClick={() => {
+                    console.log("保存编辑的元素:", editingElement)
+                    setEditDialogOpen(false)
+                  }}
+                >
+                  保存
+                </Button>
+              </DialogFooter>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </div>
