@@ -1,13 +1,6 @@
 "use client"
 
-import { useState } from "react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import {
   FileIcon,
@@ -36,6 +29,277 @@ export function Menu() {
   // 移动端菜单状态
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [activeMenu, setActiveMenu] = useState<string | null>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  // 处理菜单按钮点击
+  const handleMenuClick = (menuName: string) => {
+    if (activeMenu === menuName) {
+      // 如果点击的是当前活跃菜单，则关闭菜单
+      setActiveMenu(null)
+    } else {
+      // 否则切换到新菜单
+      setActiveMenu(menuName)
+    }
+  }
+
+  // 处理菜单按钮悬停
+  const handleMenuHover = (menuName: string) => {
+    // 只有当已经有菜单打开时，悬停才会切换菜单
+    if (activeMenu !== null) {
+      setActiveMenu(menuName)
+    }
+  }
+
+  // 处理菜单项点击
+  const handleMenuItemClick = (action: () => void = () => {}) => {
+    // 执行菜单项的操作
+    action()
+    // 关闭菜单
+    setActiveMenu(null)
+  }
+
+  // 点击外部关闭菜单
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setActiveMenu(null)
+      }
+    }
+
+    if (activeMenu !== null) {
+      document.addEventListener("mousedown", handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [activeMenu])
+
+  // 渲染菜单内容
+  const renderMenuContent = () => {
+    switch (activeMenu) {
+      case "file":
+        return (
+          <div className="absolute left-0 top-full mt-1 w-48 rounded-md bg-popover p-1 shadow-md z-50">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              <FileIcon className="mr-2 h-4 w-4" />
+              <span>新建模型</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              <FileUp className="mr-2 h-4 w-4" />
+              <span>导入模型文件</span>
+            </Button>
+            <div className="h-px bg-border my-1" />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              <Save className="mr-2 h-4 w-4" />
+              <span>保存模型</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              <FileDown className="mr-2 h-4 w-4" />
+              <span>导出模型文件</span>
+            </Button>
+          </div>
+        )
+      case "edit":
+        return (
+          <div className="absolute left-0 top-full mt-1 w-48 rounded-md bg-popover p-1 shadow-md z-50">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              <Undo2 className="mr-2 h-4 w-4" />
+              <span>撤销</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              <Redo2 className="mr-2 h-4 w-4" />
+              <span>恢复</span>
+            </Button>
+            <div className="h-px bg-border my-1" />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              <Scissors className="mr-2 h-4 w-4" />
+              <span>剪切</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              <span>复制</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              <Clipboard className="mr-2 h-4 w-4" />
+              <span>粘贴</span>
+            </Button>
+            <div className="h-px bg-border my-1" />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick(() => console.log("添加元素"))}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              <span>添加元素</span>
+            </Button>
+          </div>
+        )
+      case "view":
+        return (
+          <div className="absolute left-0 top-full mt-1 w-48 rounded-md bg-popover p-1 shadow-md z-50">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              <ZoomOut className="mr-2 h-4 w-4" />
+              <span>缩小</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              <ZoomIn className="mr-2 h-4 w-4" />
+              <span>放大</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              <Maximize className="mr-2 h-4 w-4" />
+              <span>适中</span>
+            </Button>
+          </div>
+        )
+      case "analysis":
+        return (
+          <div className="absolute left-0 top-full mt-1 w-48 rounded-md bg-popover p-1 shadow-md z-50">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              <Play className="mr-2 h-4 w-4" />
+              <span>运行</span>
+            </Button>
+          </div>
+        )
+      case "user":
+        return (
+          <div className="absolute right-0 top-full mt-1 w-48 rounded-md bg-popover p-1 shadow-md z-50">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              个人资料
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              我的项目
+            </Button>
+            <div className="h-px bg-border my-1" />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick(() => setIsLoggedIn(false))}
+            >
+              退出登录
+            </Button>
+          </div>
+        )
+      case "settings":
+        return (
+          <div className="absolute right-0 top-full mt-1 w-48 rounded-md bg-popover p-1 shadow-md z-50">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              应用设置
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              用户偏好
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              主题设置
+            </Button>
+            <div className="h-px bg-border my-1" />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              关于
+            </Button>
+          </div>
+        )
+      default:
+        return null
+    }
+  }
 
   return (
     <>
@@ -43,127 +307,82 @@ export function Menu() {
       <div className="hidden md:flex border-b bg-background justify-between">
         <div className="flex items-center">
           <div className="font-semibold px-4 py-2 text-primary">PSA分析</div>
-          <div className="flex items-center space-x-1 p-1">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8">
-                  文件
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                <DropdownMenuItem>
-                  <FileIcon className="mr-2 h-4 w-4" />
-                  <span>新建模型</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <FileUp className="mr-2 h-4 w-4" />
-                  <span>导入模型文件</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Save className="mr-2 h-4 w-4" />
-                  <span>保存模型</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <FileDown className="mr-2 h-4 w-4" />
-                  <span>导出模型文件</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="flex items-center space-x-1 p-1" ref={menuRef}>
+            {/* 文件菜单 */}
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`h-8 ${activeMenu === "file" ? "bg-accent" : ""}`}
+                onClick={() => handleMenuClick("file")}
+                onMouseEnter={() => handleMenuHover("file")}
+              >
+                文件
+              </Button>
+              {activeMenu === "file" && renderMenuContent()}
+            </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8">
-                  编辑
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                <DropdownMenuItem>
-                  <Undo2 className="mr-2 h-4 w-4" />
-                  <span>撤销</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Redo2 className="mr-2 h-4 w-4" />
-                  <span>恢复</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Scissors className="mr-2 h-4 w-4" />
-                  <span>剪切</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Copy className="mr-2 h-4 w-4" />
-                  <span>复制</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Clipboard className="mr-2 h-4 w-4" />
-                  <span>粘贴</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Plus className="mr-2 h-4 w-4" />
-                  <span>添加元素</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* 编辑菜单 */}
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`h-8 ${activeMenu === "edit" ? "bg-accent" : ""}`}
+                onClick={() => handleMenuClick("edit")}
+                onMouseEnter={() => handleMenuHover("edit")}
+              >
+                编辑
+              </Button>
+              {activeMenu === "edit" && renderMenuContent()}
+            </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8">
-                  视图
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                <DropdownMenuItem>
-                  <ZoomOut className="mr-2 h-4 w-4" />
-                  <span>缩小</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <ZoomIn className="mr-2 h-4 w-4" />
-                  <span>放大</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Maximize className="mr-2 h-4 w-4" />
-                  <span>适中</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* 视图菜单 */}
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`h-8 ${activeMenu === "view" ? "bg-accent" : ""}`}
+                onClick={() => handleMenuClick("view")}
+                onMouseEnter={() => handleMenuHover("view")}
+              >
+                视图
+              </Button>
+              {activeMenu === "view" && renderMenuContent()}
+            </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8">
-                  分析
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                <DropdownMenuItem>
-                  <Play className="mr-2 h-4 w-4" />
-                  <span>运行</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* 分析菜单 */}
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`h-8 ${activeMenu === "analysis" ? "bg-accent" : ""}`}
+                onClick={() => handleMenuClick("analysis")}
+                onMouseEnter={() => handleMenuHover("analysis")}
+              >
+                分析
+              </Button>
+              {activeMenu === "analysis" && renderMenuContent()}
+            </div>
           </div>
         </div>
 
         {/* 右侧用户和设置 */}
         <div className="flex items-center mr-2">
           {isLoggedIn ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 gap-2">
-                  <Avatar className="h-6 w-6">
-                    <AvatarFallback>用户</AvatarFallback>
-                  </Avatar>
-                  <span>用户名</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem>个人资料</DropdownMenuItem>
-                <DropdownMenuItem>我的项目</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setIsLoggedIn(false)}>退出登录</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`h-8 gap-2 ${activeMenu === "user" ? "bg-accent" : ""}`}
+                onClick={() => handleMenuClick("user")}
+              >
+                <Avatar className="h-6 w-6">
+                  <AvatarFallback>用户</AvatarFallback>
+                </Avatar>
+                <span>用户名</span>
+              </Button>
+              {activeMenu === "user" && renderMenuContent()}
+            </div>
           ) : (
             <Button variant="ghost" size="sm" className="h-8" onClick={() => setIsLoggedIn(true)}>
               <User className="mr-2 h-4 w-4" />
@@ -171,20 +390,17 @@ export function Menu() {
             </Button>
           )}
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8 ml-2">
-                <Settings className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem>应用设置</DropdownMenuItem>
-              <DropdownMenuItem>用户偏好</DropdownMenuItem>
-              <DropdownMenuItem>主题设置</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>关于</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`h-8 w-8 ml-2 ${activeMenu === "settings" ? "bg-accent" : ""}`}
+              onClick={() => handleMenuClick("settings")}
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
+            {activeMenu === "settings" && renderMenuContent()}
+          </div>
         </div>
       </div>
 
@@ -228,19 +444,19 @@ export function Menu() {
 
         {mobileMenuOpen && (
           <div className="absolute top-12 left-0 right-0 bg-background border-b z-50 p-2 shadow-lg">
-            <Button variant="ghost" className="w-full justify-start mb-1">
+            <Button variant="ghost" className="w-full justify-start mb-1" onClick={() => setMobileMenuOpen(false)}>
               <FileIcon className="mr-2 h-4 w-4" />
               文件
             </Button>
-            <Button variant="ghost" className="w-full justify-start mb-1">
+            <Button variant="ghost" className="w-full justify-start mb-1" onClick={() => setMobileMenuOpen(false)}>
               <Edit className="mr-2 h-4 w-4" />
               编辑
             </Button>
-            <Button variant="ghost" className="w-full justify-start mb-1">
+            <Button variant="ghost" className="w-full justify-start mb-1" onClick={() => setMobileMenuOpen(false)}>
               <Eye className="mr-2 h-4 w-4" />
               视图
             </Button>
-            <Button variant="ghost" className="w-full justify-start">
+            <Button variant="ghost" className="w-full justify-start" onClick={() => setMobileMenuOpen(false)}>
               <BarChart className="mr-2 h-4 w-4" />
               分析
             </Button>
