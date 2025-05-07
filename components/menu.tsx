@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
+import { signOut, useSession } from "next-auth/react"
 import {
   FileIcon,
   Edit,
@@ -22,13 +23,15 @@ import {
   BarChart,
   Settings,
   User,
+  LogOut,
 } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 export function Menu() {
+  const { data: session } = useSession()
+
   // 移动端菜单状态
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [activeMenu, setActiveMenu] = useState<string | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -57,6 +60,11 @@ export function Menu() {
     action()
     // 关闭菜单
     setActiveMenu(null)
+  }
+
+  // 处理登出
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/login" })
   }
 
   // 点击外部关闭菜单
@@ -237,24 +245,18 @@ export function Menu() {
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              个人资料
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start text-left"
-              onClick={() => handleMenuItemClick()}
-            >
-              我的项目
+              <User className="mr-2 h-4 w-4" />
+              <span>个人资料</span>
             </Button>
             <div className="h-px bg-border my-1" />
             <Button
               variant="ghost"
               size="sm"
               className="w-full justify-start text-left"
-              onClick={() => handleMenuItemClick(() => setIsLoggedIn(false))}
+              onClick={() => handleMenuItemClick(handleSignOut)}
             >
-              退出登录
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>退出登录</span>
             </Button>
           </div>
         )
@@ -368,7 +370,7 @@ export function Menu() {
 
         {/* 右侧用户和设置 */}
         <div className="flex items-center mr-2">
-          {isLoggedIn ? (
+          {session ? (
             <div className="relative">
               <Button
                 variant="ghost"
@@ -377,18 +379,13 @@ export function Menu() {
                 onClick={() => handleMenuClick("user")}
               >
                 <Avatar className="h-6 w-6">
-                  <AvatarFallback>用户</AvatarFallback>
+                  <AvatarFallback>{session.user?.name?.[0] || "U"}</AvatarFallback>
                 </Avatar>
-                <span>用户名</span>
+                <span>{session.user?.name || "用户"}</span>
               </Button>
               {activeMenu === "user" && renderMenuContent()}
             </div>
-          ) : (
-            <Button variant="ghost" size="sm" className="h-8" onClick={() => setIsLoggedIn(true)}>
-              <User className="mr-2 h-4 w-4" />
-              登录/注册
-            </Button>
-          )}
+          ) : null}
 
           <div className="relative">
             <Button
@@ -408,15 +405,11 @@ export function Menu() {
       <div className="md:hidden border-b p-2 flex justify-between items-center">
         <div className="font-semibold text-primary">PSA分析</div>
         <div className="flex items-center">
-          {isLoggedIn ? (
+          {session ? (
             <Avatar className="h-7 w-7 mr-2">
-              <AvatarFallback>用户</AvatarFallback>
+              <AvatarFallback>{session.user?.name?.[0] || "U"}</AvatarFallback>
             </Avatar>
-          ) : (
-            <Button variant="ghost" size="icon" className="h-8 w-8 mr-1" onClick={() => setIsLoggedIn(true)}>
-              <User className="h-4 w-4" />
-            </Button>
-          )}
+          ) : null}
 
           <Button variant="ghost" size="icon" className="h-8 w-8 mr-1">
             <Settings className="h-4 w-4" />
@@ -456,10 +449,19 @@ export function Menu() {
               <Eye className="mr-2 h-4 w-4" />
               视图
             </Button>
-            <Button variant="ghost" className="w-full justify-start" onClick={() => setMobileMenuOpen(false)}>
+            <Button variant="ghost" className="w-full justify-start mb-1" onClick={() => setMobileMenuOpen(false)}>
               <BarChart className="mr-2 h-4 w-4" />
               分析
             </Button>
+            {session && (
+              <>
+                <div className="h-px bg-border my-1" />
+                <Button variant="ghost" className="w-full justify-start" onClick={handleSignOut}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  退出登录
+                </Button>
+              </>
+            )}
           </div>
         )}
       </div>
