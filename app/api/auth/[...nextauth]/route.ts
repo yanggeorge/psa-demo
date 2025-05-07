@@ -1,6 +1,6 @@
-import NextAuth from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
-import type { NextAuthOptions } from "next-auth"
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import type { NextAuthOptions } from "next-auth";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -12,14 +12,17 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         // 简单的凭证检查
-        if (credentials?.username === "psaadmin" && credentials?.password === "123456") {
+        if (
+          credentials?.username === "psaadmin" &&
+          credentials?.password === "123456"
+        ) {
           return {
             id: "1",
             name: "PSA管理员",
             email: "admin@example.com",
-          }
+          };
         }
-        return null
+        return null;
       },
     }),
   ],
@@ -33,7 +36,7 @@ export const authOptions: NextAuthOptions = {
   },
   // 使用环境变量
   secret: process.env.AUTH_SECRET,
-}
+};
 
-const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST }
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
