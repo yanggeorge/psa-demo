@@ -1,11 +1,11 @@
 "use client"
 
+import { Maximize, Minimize, Move,X } from "lucide-react"
 import type React from "react"
-
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
 import { Button } from "@/components/ui/button"
-import { X, Minimize, Maximize, Move } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export function FloatingWindow() {
   const [position, setPosition] = useState({ x: 100, y: 100 })
@@ -71,27 +71,27 @@ export function FloatingWindow() {
             }
       }
     >
-      <Card className="shadow-lg border">
+      <Card className="border shadow-lg">
         <CardHeader
-          className="p-2 flex flex-row items-center justify-between cursor-move"
+          className="flex cursor-move flex-row items-center justify-between p-2"
           onMouseDown={handleDragStart}
           onMouseMove={handleDrag}
           onMouseUp={handleDragEnd}
           onMouseLeave={handleDragEnd}
         >
-          <CardTitle className="text-sm flex items-center">
-            <Move className="h-4 w-4 mr-2" />
+          <CardTitle className="flex items-center text-sm">
+            <Move className="mr-2 size-4" />
             属性面板
           </CardTitle>
           <div className="flex items-center space-x-1">
-            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleMinimize}>
-              <Minimize className="h-3 w-3" />
+            <Button variant="ghost" size="icon" className="size-6" onClick={handleMinimize}>
+              <Minimize className="size-3" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleMaximize}>
-              <Maximize className="h-3 w-3" />
+            <Button variant="ghost" size="icon" className="size-6" onClick={handleMaximize}>
+              <Maximize className="size-3" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleClose}>
-              <X className="h-3 w-3" />
+            <Button variant="ghost" size="icon" className="size-6" onClick={handleClose}>
+              <X className="size-3" />
             </Button>
           </div>
         </CardHeader>
@@ -101,18 +101,18 @@ export function FloatingWindow() {
             <div className="space-y-3">
               <div>
                 <label className="text-sm font-medium">名称</label>
-                <input type="text" className="w-full mt-1 px-2 py-1 text-sm border rounded" defaultValue="示例对象" />
+                <input type="text" className="mt-1 w-full rounded border px-2 py-1 text-sm" defaultValue="示例对象" />
               </div>
               <div>
                 <label className="text-sm font-medium">尺寸</label>
-                <div className="grid grid-cols-2 gap-2 mt-1">
-                  <input type="text" className="px-2 py-1 text-sm border rounded" defaultValue="100" />
-                  <input type="text" className="px-2 py-1 text-sm border rounded" defaultValue="100" />
+                <div className="mt-1 grid grid-cols-2 gap-2">
+                  <input type="text" className="rounded border px-2 py-1 text-sm" defaultValue="100" />
+                  <input type="text" className="rounded border px-2 py-1 text-sm" defaultValue="100" />
                 </div>
               </div>
               <div>
                 <label className="text-sm font-medium">颜色</label>
-                <input type="color" className="w-full mt-1 h-8 p-0 border rounded" defaultValue="#ff5722" />
+                <input type="color" className="mt-1 h-8 w-full rounded border p-0" defaultValue="#ff5722" />
               </div>
             </div>
           </CardContent>

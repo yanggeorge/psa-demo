@@ -1,131 +1,136 @@
-"use client"
+'use client';
 
-import type React from "react"
+import { ArrowUpDown, ChevronLeft, ChevronRight, Edit, MoreHorizontal, Plus, Search, Trash } from 'lucide-react';
+import type React from 'react';
+import { useState } from 'react';
 
-import { useState } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { MoreHorizontal, Plus, Search, ArrowUpDown, Trash, Edit, ChevronLeft, ChevronRight } from "lucide-react"
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 // 模拟数据
 const initialData = Array.from({ length: 25 }).map((_, i) => ({
   id: `G${i + 1}`,
-  connective: ["AND", "OR", "XOR", "NOT", "NAND", "NOR"][Math.floor(Math.random() * 6)],
+  connective: ['AND', 'OR', 'XOR', 'NOT', 'NAND', 'NOR'][Math.floor(Math.random() * 6)],
   args: `${Math.floor(Math.random() * 5) + 1}`,
   label: `Gate ${i + 1} Description`,
-}))
+}));
 
 export function GatesTable() {
-  const [data, setData] = useState(initialData)
-  const [filteredData, setFilteredData] = useState(initialData)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage] = useState(10)
-  const [sortConfig, setSortConfig] = useState<{ key: string; direction: "ascending" | "descending" } | null>(null)
+  const [data, setData] = useState(initialData);
+  const [filteredData, setFilteredData] = useState(initialData);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'ascending' | 'descending' } | null>(null);
 
   // 对话框状态
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [currentItem, setCurrentItem] = useState<any>(null)
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [currentItem, setCurrentItem] = useState<any>(null);
   const [newItem, setNewItem] = useState({
-    id: "",
-    connective: "AND",
-    args: "1",
-    label: "",
-  })
+    id: '',
+    connective: 'AND',
+    args: '1',
+    label: '',
+  });
 
   // 排序处理
   const requestSort = (key: string) => {
-    let direction: "ascending" | "descending" = "ascending"
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === "ascending") {
-      direction = "descending"
+    let direction: 'ascending' | 'descending' = 'ascending';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
     }
-    setSortConfig({ key, direction })
+    setSortConfig({ key, direction });
 
     const sortedData = [...filteredData].sort((a, b) => {
       if (a[key as keyof typeof a] < b[key as keyof typeof b]) {
-        return direction === "ascending" ? -1 : 1
+        return direction === 'ascending' ? -1 : 1;
       }
       if (a[key as keyof typeof a] > b[key as keyof typeof b]) {
-        return direction === "ascending" ? 1 : -1
+        return direction === 'ascending' ? 1 : -1;
       }
-      return 0
-    })
+      return 0;
+    });
 
-    setFilteredData(sortedData)
-  }
+    setFilteredData(sortedData);
+  };
 
   // 搜索处理
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const term = e.target.value
-    setSearchTerm(term)
+    const term = e.target.value;
+    setSearchTerm(term);
 
-    const filtered = data.filter((item) => item.id.toLowerCase().includes(term.toLowerCase()))
+    const filtered = data.filter((item) => item.id.toLowerCase().includes(term.toLowerCase()));
 
-    setFilteredData(filtered)
-    setCurrentPage(1)
-  }
+    setFilteredData(filtered);
+    setCurrentPage(1);
+  };
 
   // 分页处理
-  const indexOfLastItem = currentPage * itemsPerPage
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage
-  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem)
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage)
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   // 添加新项目
   const handleAddItem = () => {
-    const updatedData = [...data, newItem]
-    setData(updatedData)
-    setFilteredData(updatedData)
-    setIsAddDialogOpen(false)
+    const updatedData = [...data, newItem];
+    setData(updatedData);
+    setFilteredData(updatedData);
+    setIsAddDialogOpen(false);
     setNewItem({
-      id: "",
-      connective: "AND",
-      args: "1",
-      label: "",
-    })
-  }
+      id: '',
+      connective: 'AND',
+      args: '1',
+      label: '',
+    });
+  };
 
   // 编辑项目
   const handleEditItem = () => {
-    if (!currentItem) return
+    if (!currentItem) return;
 
-    const updatedData = data.map((item) => (item.id === currentItem.id ? currentItem : item))
+    const updatedData = data.map((item) => (item.id === currentItem.id ? currentItem : item));
 
-    setData(updatedData)
-    setFilteredData(updatedData)
-    setIsEditDialogOpen(false)
-    setCurrentItem(null)
-  }
+    setData(updatedData);
+    setFilteredData(updatedData);
+    setIsEditDialogOpen(false);
+    setCurrentItem(null);
+  };
 
   // 删除项目
   const handleDeleteItem = () => {
-    if (!currentItem) return
+    if (!currentItem) return;
 
-    const updatedData = data.filter((item) => item.id !== currentItem.id)
-    setData(updatedData)
-    setFilteredData(updatedData)
-    setIsDeleteDialogOpen(false)
-    setCurrentItem(null)
-  }
+    const updatedData = data.filter((item) => item.id !== currentItem.id);
+    setData(updatedData);
+    setFilteredData(updatedData);
+    setIsDeleteDialogOpen(false);
+    setCurrentItem(null);
+  };
 
   return (
-    <div className="h-full w-full overflow-auto thin-scrollbar">
+    <div className="thin-scrollbar size-full overflow-auto">
       <div className="space-y-4 p-4">
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="relative">
-              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="按ID搜索..." value={searchTerm} onChange={handleSearch} className="pl-8 w-[250px]" />
+              <Search className="absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input placeholder="按ID搜索..." value={searchTerm} onChange={handleSearch} className="w-[250px] pl-8" />
             </div>
           </div>
           <Button onClick={() => setIsAddDialogOpen(true)}>
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="mr-2 size-4" />
             新增
           </Button>
         </div>
@@ -135,27 +140,27 @@ export function GatesTable() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[100px]">
-                  <Button variant="ghost" className="p-0 h-8 font-medium" onClick={() => requestSort("id")}>
+                  <Button variant="ghost" className="h-8 p-0 font-medium" onClick={() => requestSort('id')}>
                     ID
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    <ArrowUpDown className="ml-2 size-4" />
                   </Button>
                 </TableHead>
                 <TableHead>
-                  <Button variant="ghost" className="p-0 h-8 font-medium" onClick={() => requestSort("connective")}>
+                  <Button variant="ghost" className="h-8 p-0 font-medium" onClick={() => requestSort('connective')}>
                     Connective
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    <ArrowUpDown className="ml-2 size-4" />
                   </Button>
                 </TableHead>
                 <TableHead>
-                  <Button variant="ghost" className="p-0 h-8 font-medium" onClick={() => requestSort("args")}>
+                  <Button variant="ghost" className="h-8 p-0 font-medium" onClick={() => requestSort('args')}>
                     Args
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    <ArrowUpDown className="ml-2 size-4" />
                   </Button>
                 </TableHead>
                 <TableHead>
-                  <Button variant="ghost" className="p-0 h-8 font-medium" onClick={() => requestSort("label")}>
+                  <Button variant="ghost" className="h-8 p-0 font-medium" onClick={() => requestSort('label')}>
                     Label
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    <ArrowUpDown className="ml-2 size-4" />
                   </Button>
                 </TableHead>
                 <TableHead className="w-[50px]">操作</TableHead>
@@ -164,7 +169,7 @@ export function GatesTable() {
             <TableBody>
               {currentItems.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-4">
+                  <TableCell colSpan={5} className="py-4 text-center">
                     没有找到数据
                   </TableCell>
                 </TableRow>
@@ -178,27 +183,27 @@ export function GatesTable() {
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <MoreHorizontal className="h-4 w-4" />
+                          <Button variant="ghost" size="icon" className="size-8">
+                            <MoreHorizontal className="size-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
                             onClick={() => {
-                              setCurrentItem(item)
-                              setIsEditDialogOpen(true)
+                              setCurrentItem(item);
+                              setIsEditDialogOpen(true);
                             }}
                           >
-                            <Edit className="h-4 w-4 mr-2" />
+                            <Edit className="mr-2 size-4" />
                             编辑
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => {
-                              setCurrentItem(item)
-                              setIsDeleteDialogOpen(true)
+                              setCurrentItem(item);
+                              setIsDeleteDialogOpen(true);
                             }}
                           >
-                            <Trash className="h-4 w-4 mr-2" />
+                            <Trash className="mr-2 size-4" />
                             删除
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -223,7 +228,7 @@ export function GatesTable() {
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="size-4" />
             </Button>
             <div className="text-sm">
               第 {currentPage} 页，共 {totalPages} 页
@@ -234,7 +239,7 @@ export function GatesTable() {
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="size-4" />
             </Button>
           </div>
         </div>
@@ -385,7 +390,7 @@ export function GatesTable() {
               <DialogTitle>确认删除</DialogTitle>
             </DialogHeader>
             <div className="py-4">
-              <p>您确定要删除 ID 为 "{currentItem?.id}" 的门吗？此操作无法撤销。</p>
+              <p>您确定要删除 ID 为 &quot;{currentItem?.id}&quot; 的门吗？此操作无法撤销。</p>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
@@ -399,5 +404,5 @@ export function GatesTable() {
         </Dialog>
       </div>
     </div>
-  )
+  );
 }

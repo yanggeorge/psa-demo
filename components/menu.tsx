@@ -1,31 +1,32 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import { signOut, useSession } from "next-auth/react"
 import {
-  FileIcon,
-  Edit,
-  Save,
-  FileUp,
-  FileDown,
-  Undo2,
-  Redo2,
-  Scissors,
-  Copy,
+  BarChart,
   Clipboard,
-  Plus,
-  ZoomIn,
-  ZoomOut,
+  Copy,
+  Edit,
+  Eye,
+  FileDown,
+  FileIcon,
+  FileUp,
+  LogOut,
   Maximize,
   Play,
-  Eye,
-  BarChart,
+  Plus,
+  Redo2,
+  Save,
+  Scissors,
   Settings,
+  Undo2,
   User,
-  LogOut,
+  ZoomIn,
+  ZoomOut,
 } from "lucide-react"
+import { signOut, useSession } from "next-auth/react"
+import { useEffect, useRef,useState } from "react"
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 
 export function Menu() {
   const { data: session } = useSession()
@@ -89,14 +90,14 @@ export function Menu() {
     switch (activeMenu) {
       case "file":
         return (
-          <div className="absolute left-0 top-full mt-1 w-48 rounded-md bg-popover p-1 shadow-md z-50">
+          <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
             <Button
               variant="ghost"
               size="sm"
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              <FileIcon className="mr-2 h-4 w-4" />
+              <FileIcon className="mr-2 size-4" />
               <span>新建模型</span>
             </Button>
             <Button
@@ -105,17 +106,17 @@ export function Menu() {
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              <FileUp className="mr-2 h-4 w-4" />
+              <FileUp className="mr-2 size-4" />
               <span>导入模型文件</span>
             </Button>
-            <div className="h-px bg-border my-1" />
+            <div className="my-1 h-px bg-border" />
             <Button
               variant="ghost"
               size="sm"
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              <Save className="mr-2 h-4 w-4" />
+              <Save className="mr-2 size-4" />
               <span>保存模型</span>
             </Button>
             <Button
@@ -124,21 +125,21 @@ export function Menu() {
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              <FileDown className="mr-2 h-4 w-4" />
+              <FileDown className="mr-2 size-4" />
               <span>导出模型文件</span>
             </Button>
           </div>
         )
       case "edit":
         return (
-          <div className="absolute left-0 top-full mt-1 w-48 rounded-md bg-popover p-1 shadow-md z-50">
+          <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
             <Button
               variant="ghost"
               size="sm"
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              <Undo2 className="mr-2 h-4 w-4" />
+              <Undo2 className="mr-2 size-4" />
               <span>撤销</span>
             </Button>
             <Button
@@ -147,17 +148,17 @@ export function Menu() {
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              <Redo2 className="mr-2 h-4 w-4" />
+              <Redo2 className="mr-2 size-4" />
               <span>恢复</span>
             </Button>
-            <div className="h-px bg-border my-1" />
+            <div className="my-1 h-px bg-border" />
             <Button
               variant="ghost"
               size="sm"
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              <Scissors className="mr-2 h-4 w-4" />
+              <Scissors className="mr-2 size-4" />
               <span>剪切</span>
             </Button>
             <Button
@@ -166,7 +167,7 @@ export function Menu() {
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              <Copy className="mr-2 h-4 w-4" />
+              <Copy className="mr-2 size-4" />
               <span>复制</span>
             </Button>
             <Button
@@ -175,31 +176,31 @@ export function Menu() {
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              <Clipboard className="mr-2 h-4 w-4" />
+              <Clipboard className="mr-2 size-4" />
               <span>粘贴</span>
             </Button>
-            <div className="h-px bg-border my-1" />
+            <div className="my-1 h-px bg-border" />
             <Button
               variant="ghost"
               size="sm"
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick(() => console.log("添加元素"))}
             >
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="mr-2 size-4" />
               <span>添加元素</span>
             </Button>
           </div>
         )
       case "view":
         return (
-          <div className="absolute left-0 top-full mt-1 w-48 rounded-md bg-popover p-1 shadow-md z-50">
+          <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
             <Button
               variant="ghost"
               size="sm"
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              <ZoomOut className="mr-2 h-4 w-4" />
+              <ZoomOut className="mr-2 size-4" />
               <span>缩小</span>
             </Button>
             <Button
@@ -208,7 +209,7 @@ export function Menu() {
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              <ZoomIn className="mr-2 h-4 w-4" />
+              <ZoomIn className="mr-2 size-4" />
               <span>放大</span>
             </Button>
             <Button
@@ -217,52 +218,52 @@ export function Menu() {
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              <Maximize className="mr-2 h-4 w-4" />
+              <Maximize className="mr-2 size-4" />
               <span>适中</span>
             </Button>
           </div>
         )
       case "analysis":
         return (
-          <div className="absolute left-0 top-full mt-1 w-48 rounded-md bg-popover p-1 shadow-md z-50">
+          <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
             <Button
               variant="ghost"
               size="sm"
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              <Play className="mr-2 h-4 w-4" />
+              <Play className="mr-2 size-4" />
               <span>运行</span>
             </Button>
           </div>
         )
       case "user":
         return (
-          <div className="absolute right-0 top-full mt-1 w-48 rounded-md bg-popover p-1 shadow-md z-50">
+          <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
             <Button
               variant="ghost"
               size="sm"
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick()}
             >
-              <User className="mr-2 h-4 w-4" />
+              <User className="mr-2 size-4" />
               <span>个人资料</span>
             </Button>
-            <div className="h-px bg-border my-1" />
+            <div className="my-1 h-px bg-border" />
             <Button
               variant="ghost"
               size="sm"
               className="w-full justify-start text-left"
               onClick={() => handleMenuItemClick(handleSignOut)}
             >
-              <LogOut className="mr-2 h-4 w-4" />
+              <LogOut className="mr-2 size-4" />
               <span>退出登录</span>
             </Button>
           </div>
         )
       case "settings":
         return (
-          <div className="absolute right-0 top-full mt-1 w-48 rounded-md bg-popover p-1 shadow-md z-50">
+          <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
             <Button
               variant="ghost"
               size="sm"
@@ -287,7 +288,7 @@ export function Menu() {
             >
               主题设置
             </Button>
-            <div className="h-px bg-border my-1" />
+            <div className="my-1 h-px bg-border" />
             <Button
               variant="ghost"
               size="sm"
@@ -306,9 +307,9 @@ export function Menu() {
   return (
     <>
       {/* 桌面端水平菜单 */}
-      <div className="hidden md:flex border-b bg-background justify-between">
+      <div className="hidden justify-between border-b bg-background md:flex">
         <div className="flex items-center">
-          <div className="font-semibold px-4 py-2 text-primary">PSA分析</div>
+          <div className="px-4 py-2 font-semibold text-primary">PSA分析</div>
           <div className="flex items-center space-x-1 p-1" ref={menuRef}>
             {/* 文件菜单 */}
             <div className="relative">
@@ -369,7 +370,7 @@ export function Menu() {
         </div>
 
         {/* 右侧用户和设置 */}
-        <div className="flex items-center mr-2">
+        <div className="mr-2 flex items-center">
           {session ? (
             <div className="relative">
               <Button
@@ -378,7 +379,7 @@ export function Menu() {
                 className={`h-8 gap-2 ${activeMenu === "user" ? "bg-accent" : ""}`}
                 onClick={() => handleMenuClick("user")}
               >
-                <Avatar className="h-6 w-6">
+                <Avatar className="size-6">
                   <AvatarFallback>{session.user?.name?.[0] || "U"}</AvatarFallback>
                 </Avatar>
                 <span>{session.user?.name || "用户"}</span>
@@ -391,10 +392,10 @@ export function Menu() {
             <Button
               variant="ghost"
               size="icon"
-              className={`h-8 w-8 ml-2 ${activeMenu === "settings" ? "bg-accent" : ""}`}
+              className={`ml-2 size-8 ${activeMenu === "settings" ? "bg-accent" : ""}`}
               onClick={() => handleMenuClick("settings")}
             >
-              <Settings className="h-4 w-4" />
+              <Settings className="size-4" />
             </Button>
             {activeMenu === "settings" && renderMenuContent()}
           </div>
@@ -402,17 +403,17 @@ export function Menu() {
       </div>
 
       {/* 移动端菜单 */}
-      <div className="md:hidden border-b p-2 flex justify-between items-center">
+      <div className="flex items-center justify-between border-b p-2 md:hidden">
         <div className="font-semibold text-primary">PSA分析</div>
         <div className="flex items-center">
           {session ? (
-            <Avatar className="h-7 w-7 mr-2">
+            <Avatar className="mr-2 size-7">
               <AvatarFallback>{session.user?.name?.[0] || "U"}</AvatarFallback>
             </Avatar>
           ) : null}
 
-          <Button variant="ghost" size="icon" className="h-8 w-8 mr-1">
-            <Settings className="h-4 w-4" />
+          <Button variant="ghost" size="icon" className="mr-1 size-8">
+            <Settings className="size-4" />
           </Button>
 
           <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
@@ -436,28 +437,28 @@ export function Menu() {
         </div>
 
         {mobileMenuOpen && (
-          <div className="absolute top-12 left-0 right-0 bg-background border-b z-50 p-2 shadow-lg">
-            <Button variant="ghost" className="w-full justify-start mb-1" onClick={() => setMobileMenuOpen(false)}>
-              <FileIcon className="mr-2 h-4 w-4" />
+          <div className="absolute inset-x-0 top-12 z-50 border-b bg-background p-2 shadow-lg">
+            <Button variant="ghost" className="mb-1 w-full justify-start" onClick={() => setMobileMenuOpen(false)}>
+              <FileIcon className="mr-2 size-4" />
               文件
             </Button>
-            <Button variant="ghost" className="w-full justify-start mb-1" onClick={() => setMobileMenuOpen(false)}>
-              <Edit className="mr-2 h-4 w-4" />
+            <Button variant="ghost" className="mb-1 w-full justify-start" onClick={() => setMobileMenuOpen(false)}>
+              <Edit className="mr-2 size-4" />
               编辑
             </Button>
-            <Button variant="ghost" className="w-full justify-start mb-1" onClick={() => setMobileMenuOpen(false)}>
-              <Eye className="mr-2 h-4 w-4" />
+            <Button variant="ghost" className="mb-1 w-full justify-start" onClick={() => setMobileMenuOpen(false)}>
+              <Eye className="mr-2 size-4" />
               视图
             </Button>
-            <Button variant="ghost" className="w-full justify-start mb-1" onClick={() => setMobileMenuOpen(false)}>
-              <BarChart className="mr-2 h-4 w-4" />
+            <Button variant="ghost" className="mb-1 w-full justify-start" onClick={() => setMobileMenuOpen(false)}>
+              <BarChart className="mr-2 size-4" />
               分析
             </Button>
             {session && (
               <>
-                <div className="h-px bg-border my-1" />
+                <div className="my-1 h-px bg-border" />
                 <Button variant="ghost" className="w-full justify-start" onClick={handleSignOut}>
-                  <LogOut className="mr-2 h-4 w-4" />
+                  <LogOut className="mr-2 size-4" />
                   退出登录
                 </Button>
               </>

@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { ChevronLeft, ChevronRight, FileText } from "lucide-react"
+import { useEffect,useState } from "react"
+
 import { Button } from "@/components/ui/button"
-import { ChevronRight, ChevronLeft, FileText } from "lucide-react"
 
 export function ReportsSidebar() {
   const [collapsed, setCollapsed] = useState(true)
@@ -18,22 +19,22 @@ export function ReportsSidebar() {
 
   return (
     <div
-      className={`border-l bg-muted/20 transition-all ${collapsed ? "w-12" : "w-64"} flex flex-col h-full overflow-hidden`}
+      className={`border-l bg-muted/20 transition-all ${collapsed ? "w-12" : "w-64"} flex h-full flex-col overflow-hidden`}
     >
-      <div className="p-2 flex justify-between items-center border-b">
-        <h2 className={`font-medium text-sm ${collapsed ? "hidden" : "block"}`}>报告列表</h2>
-        <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="h-7 w-7">
-          {collapsed ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+      <div className="flex items-center justify-between border-b p-2">
+        <h2 className={`text-sm font-medium ${collapsed ? "hidden" : "block"}`}>报告列表</h2>
+        <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="size-7">
+          {collapsed ? <ChevronLeft className="size-4" /> : <ChevronRight className="size-4" />}
         </Button>
       </div>
 
       {!collapsed ? (
-        <div className="flex-1 overflow-y-auto p-2 thin-scrollbar">
+        <div className="thin-scrollbar flex-1 overflow-y-auto p-2">
           <div className="space-y-1">
             <Button
               variant="ghost"
               size="sm"
-              className="w-full justify-start text-sm h-8"
+              className="h-8 w-full justify-start text-sm"
               onClick={() => {
                 // Create a custom event to open a report tab
                 const event = new CustomEvent("openReportTab", {
@@ -42,13 +43,13 @@ export function ReportsSidebar() {
                 window.dispatchEvent(event)
               }}
             >
-              <FileText className="h-4 w-4 mr-2" />
+              <FileText className="mr-2 size-4" />
               fault tree1 报告
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className="w-full justify-start text-sm h-8"
+              className="h-8 w-full justify-start text-sm"
               onClick={() => {
                 // Create a custom event to open a report tab
                 const event = new CustomEvent("openReportTab", {
@@ -57,17 +58,17 @@ export function ReportsSidebar() {
                 window.dispatchEvent(event)
               }}
             >
-              <FileText className="h-4 w-4 mr-2" />
+              <FileText className="mr-2 size-4" />
               fault tree2 报告
             </Button>
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center pt-2">
+        <div className="flex flex-1 flex-col items-center pt-2">
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={() => {
               // Create a custom event to open a report tab
               const event = new CustomEvent("openReportTab", {
@@ -76,7 +77,7 @@ export function ReportsSidebar() {
               window.dispatchEvent(event)
             }}
           >
-            <FileText className="h-4 w-4" />
+            <FileText className="size-4" />
           </Button>
         </div>
       )}

@@ -1,9 +1,8 @@
 "use client"
 
-import type React from "react"
-
-import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import type React from "react"
 import { useEffect } from "react"
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
@@ -20,8 +19,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="size-12 animate-spin rounded-full border-y-2 border-primary"></div>
       </div>
     )
   }

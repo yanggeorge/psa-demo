@@ -1,11 +1,11 @@
 "use client"
 
+import { Maximize,Minimize, X } from "lucide-react"
 import type React from "react"
+import { useEffect,useState } from "react"
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { X, Minimize, Maximize } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -208,9 +208,9 @@ export function NodeEditor({ node, onClose, onUpdate, viewportDimensions }: Node
 
   return (
     <div style={editorStyle as React.CSSProperties}>
-      <Card className="shadow-lg border">
-        <CardHeader className="p-2 flex flex-row items-center justify-between">
-          <CardTitle className="text-sm flex items-center">
+      <Card className="border shadow-lg">
+        <CardHeader className="flex flex-row items-center justify-between p-2">
+          <CardTitle className="flex items-center text-sm">
             {node.type === "gate"
               ? "编辑门"
               : node.type === "basicEvent"
@@ -220,14 +220,14 @@ export function NodeEditor({ node, onClose, onUpdate, viewportDimensions }: Node
                   : "编辑节点"}
           </CardTitle>
           <div className="flex items-center space-x-1">
-            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleMinimize}>
-              <Minimize className="h-3 w-3" />
+            <Button variant="ghost" size="icon" className="size-6" onClick={handleMinimize}>
+              <Minimize className="size-3" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleMaximize}>
-              <Maximize className="h-3 w-3" />
+            <Button variant="ghost" size="icon" className="size-6" onClick={handleMaximize}>
+              <Maximize className="size-3" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onClose}>
-              <X className="h-3 w-3" />
+            <Button variant="ghost" size="icon" className="size-6" onClick={onClose}>
+              <X className="size-3" />
             </Button>
           </div>
         </CardHeader>
@@ -235,7 +235,7 @@ export function NodeEditor({ node, onClose, onUpdate, viewportDimensions }: Node
         {!isMinimized && (
           <CardContent className="p-4">
             {renderEditorContent()}
-            <div className="flex justify-end space-x-2 mt-4">
+            <div className="mt-4 flex justify-end space-x-2">
               <Button variant="outline" onClick={onClose}>
                 取消
               </Button>

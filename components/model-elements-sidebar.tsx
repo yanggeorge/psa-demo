@@ -1,24 +1,25 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
 import {
-  ChevronRight,
   ChevronDown,
-  Network,
-  DoorOpenIcon as Gate,
-  Circle,
-  Home,
   ChevronLeft,
+  ChevronRight,
+  Circle,
+  DoorOpenIcon as Gate,
+  Home,
+  Network,
   Plus,
   Search,
 } from "lucide-react"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { useEffect,useState } from "react"
+
 import { Badge } from "@/components/ui/badge"
-import { parseXML } from "@/lib/xml-parser"
+import { Button } from "@/components/ui/button"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Dialog, DialogContent, DialogFooter,DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
+import { parseXML } from "@/lib/xml-parser"
 
 // 示例XML数据 - 增加了更多的基本事件（B3到B20）
 const sampleXmlData = `<?xml version="1.0" encoding="UTF-8"?>
@@ -236,58 +237,58 @@ export function ModelElementsSidebar() {
 
   return (
     <div
-      className={`border-r bg-muted/20 transition-all ${collapsed ? "w-12" : "w-64"} flex flex-col h-full overflow-hidden`}
+      className={`border-r bg-muted/20 transition-all ${collapsed ? "w-12" : "w-64"} flex h-full flex-col overflow-hidden`}
     >
-      <div className="p-2 flex justify-between items-center border-b">
-        <h2 className={`font-medium text-sm ${collapsed ? "hidden" : "block"}`}>模型元素</h2>
-        <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="h-7 w-7">
-          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+      <div className="flex items-center justify-between border-b p-2">
+        <h2 className={`text-sm font-medium ${collapsed ? "hidden" : "block"}`}>模型元素</h2>
+        <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="size-7">
+          {collapsed ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
         </Button>
       </div>
 
       {!collapsed && (
-        <div className="p-2 border-b">
+        <div className="border-b p-2">
           <div className="relative">
-            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="过滤元素..."
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
-              className="pl-8 h-8 text-sm"
+              className="h-8 pl-8 text-sm"
             />
           </div>
         </div>
       )}
 
       {!collapsed ? (
-        <div className="flex-1 overflow-y-auto p-2 thin-scrollbar">
+        <div className="thin-scrollbar flex-1 overflow-y-auto p-2">
           <Collapsible defaultOpen className="mb-2">
             <div className="flex items-center justify-between">
-              <CollapsibleTrigger className="flex items-center justify-between w-full p-2 text-sm hover:bg-muted rounded-md">
+              <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md p-2 text-sm hover:bg-muted">
                 <div className="flex items-center">
-                  <Network className="h-4 w-4 mr-2" />
+                  <Network className="mr-2 size-4" />
                   <span>故障树</span>
                 </div>
-                <ChevronDown className="h-4 w-4 transition-transform ui-open:rotate-180" />
+                <ChevronDown className="ui-open:rotate-180 size-4 transition-transform" />
               </CollapsibleTrigger>
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 ml-1"
+                className="ml-1 size-7"
                 onClick={() => setIsNewTreeDialogOpen(true)}
                 title="新增故障树"
               >
-                <Plus className="h-4 w-4" />
+                <Plus className="size-4" />
               </Button>
             </div>
             <CollapsibleContent>
-              <div className="pl-6 mt-1 space-y-1">
+              <div className="mt-1 space-y-1 pl-6">
                 {filteredTrees.map((tree: any) => (
                   <Button
                     key={tree.name}
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start text-xs h-7"
+                    className="h-7 w-full justify-start text-xs"
                     onClick={() => openFaultTreeTab(tree.name)}
                   >
                     {tree.name}
@@ -298,26 +299,26 @@ export function ModelElementsSidebar() {
           </Collapsible>
 
           <Collapsible open={gatesExpanded} onOpenChange={setGatesExpanded} className="mb-2">
-            <CollapsibleTrigger className="flex items-center justify-between w-full p-2 text-sm hover:bg-muted rounded-md">
+            <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md p-2 text-sm hover:bg-muted">
               <div className="flex items-center">
-                <Gate className="h-4 w-4 mr-2" />
+                <Gate className="mr-2 size-4" />
                 <span>门</span>
               </div>
               <div className="flex items-center">
-                <Badge variant="outline" className="text-xs mr-2">
+                <Badge variant="outline" className="mr-2 text-xs">
                   {filteredGates.length || 0}
                 </Badge>
-                <ChevronDown className={`h-4 w-4 transition-transform ${gatesExpanded ? "rotate-180" : ""}`} />
+                <ChevronDown className={`size-4 transition-transform ${gatesExpanded ? "rotate-180" : ""}`} />
               </div>
             </CollapsibleTrigger>
             <CollapsibleContent>
-              <div className="pl-6 mt-1 space-y-1">
+              <div className="mt-1 space-y-1 pl-6">
                 {filteredGates.map((gate: any) => (
                   <Button
                     key={gate.name}
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start text-xs h-7"
+                    className="h-7 w-full justify-start text-xs"
                     onClick={() => openElement("gates", gate.name)}
                     onDoubleClick={() => {
                       setEditingElement(gate)
@@ -333,26 +334,26 @@ export function ModelElementsSidebar() {
           </Collapsible>
 
           <Collapsible open={basicEventsExpanded} onOpenChange={setBasicEventsExpanded} className="mb-2">
-            <CollapsibleTrigger className="flex items-center justify-between w-full p-2 text-sm hover:bg-muted rounded-md">
+            <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md p-2 text-sm hover:bg-muted">
               <div className="flex items-center">
-                <Circle className="h-4 w-4 mr-2" />
+                <Circle className="mr-2 size-4" />
                 <span>基本事件</span>
               </div>
               <div className="flex items-center">
-                <Badge variant="outline" className="text-xs mr-2">
+                <Badge variant="outline" className="mr-2 text-xs">
                   {filteredBasicEvents.length || 0}
                 </Badge>
-                <ChevronDown className={`h-4 w-4 transition-transform ${basicEventsExpanded ? "rotate-180" : ""}`} />
+                <ChevronDown className={`size-4 transition-transform ${basicEventsExpanded ? "rotate-180" : ""}`} />
               </div>
             </CollapsibleTrigger>
             <CollapsibleContent>
-              <div className="pl-6 mt-1 space-y-1">
+              <div className="mt-1 space-y-1 pl-6">
                 {filteredBasicEvents.map((event: any) => (
                   <Button
                     key={event.name}
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start text-xs h-7"
+                    className="h-7 w-full justify-start text-xs"
                     onClick={() => openElement("basicEvents", event.name)}
                     onDoubleClick={() => {
                       setEditingElement(event)
@@ -368,26 +369,26 @@ export function ModelElementsSidebar() {
           </Collapsible>
 
           <Collapsible open={houseEventsExpanded} onOpenChange={setHouseEventsExpanded}>
-            <CollapsibleTrigger className="flex items-center justify-between w-full p-2 text-sm hover:bg-muted rounded-md">
+            <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md p-2 text-sm hover:bg-muted">
               <div className="flex items-center">
-                <Home className="h-4 w-4 mr-2" />
+                <Home className="mr-2 size-4" />
                 <span>房屋事件</span>
               </div>
               <div className="flex items-center">
-                <Badge variant="outline" className="text-xs mr-2">
+                <Badge variant="outline" className="mr-2 text-xs">
                   {filteredHouseEvents.length || 0}
                 </Badge>
-                <ChevronDown className={`h-4 w-4 transition-transform ${houseEventsExpanded ? "rotate-180" : ""}`} />
+                <ChevronDown className={`size-4 transition-transform ${houseEventsExpanded ? "rotate-180" : ""}`} />
               </div>
             </CollapsibleTrigger>
             <CollapsibleContent>
-              <div className="pl-6 mt-1 space-y-1">
+              <div className="mt-1 space-y-1 pl-6">
                 {filteredHouseEvents.map((event: any) => (
                   <Button
                     key={event.name}
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start text-xs h-7"
+                    className="h-7 w-full justify-start text-xs"
                     onClick={() => openElement("houseEvents", event.name)}
                     onDoubleClick={() => {
                       setEditingElement(event)
@@ -403,42 +404,42 @@ export function ModelElementsSidebar() {
           </Collapsible>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center pt-2 space-y-4">
+        <div className="flex flex-1 flex-col items-center space-y-4 pt-2">
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={() => openElementTab("faultTreeViewer")}
             title="故障树列表"
           >
-            <Network className="h-4 w-4" />
+            <Network className="size-4" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={() => openElementTab("gates")}
             title="门列表"
           >
-            <Gate className="h-4 w-4" />
+            <Gate className="size-4" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={() => openElementTab("basicEvents")}
             title="基本事件列表"
           >
-            <Circle className="h-4 w-4" />
+            <Circle className="size-4" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={() => openElementTab("houseEvents")}
             title="房屋事件列表"
           >
-            <Home className="h-4 w-4" />
+            <Home className="size-4" />
           </Button>
         </div>
       )}

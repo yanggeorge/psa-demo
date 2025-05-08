@@ -16,7 +16,7 @@ export function HouseEventNode({ data, id }: HouseEventNodeProps) {
     <div className="flex flex-col items-center">
       <Handle type="target" position={Position.Top} />
       <div
-        className="w-[100px] h-[80px] border-2 border-green-500 bg-green-50 flex items-center justify-center shadow-md cursor-pointer"
+        className="flex h-[80px] w-[100px] cursor-pointer items-center justify-center border-2 border-green-500 bg-green-50 shadow-md"
         style={{ clipPath: "polygon(0% 20%, 50% 0%, 100% 20%, 100% 100%, 0% 100%)" }}
         onClick={() => data.onClick && data.onClick()}
       >

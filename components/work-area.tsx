@@ -1,23 +1,24 @@
 "use client"
 
+import { ChevronDown, X } from "lucide-react"
 import type React from "react"
+import { useEffect, useMemo,useRef, useState } from "react"
 
-import { useState, useEffect, useRef, useMemo } from "react"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogFooter,DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { GatesTable } from "./tables/gates-table"
-import { BasicEventsTable } from "./tables/basic-events-table"
-import { HouseEventsTable } from "./tables/house-events-table"
+import { parseXML } from "@/lib/xml-parser"
+
 import { FaultTreeViewer } from "./fault-tree-viewer"
 import { ReportViewer } from "./report-viewer"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { ChevronDown, X } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { parseXML } from "@/lib/xml-parser"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
+import { BasicEventsTable } from "./tables/basic-events-table"
+import { GatesTable } from "./tables/gates-table"
+import { HouseEventsTable } from "./tables/house-events-table"
 
 // 示例XML数据
 const sampleXmlData = `<?xml version="1.0" encoding="UTF-8"?>
@@ -408,12 +409,12 @@ export function WorkArea() {
   const { type: currentTabType, treeName: currentTreeName } = getCurrentTabInfo()
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden">
-      <Tabs value={activeTab} className="flex-1 flex flex-col h-full" onValueChange={setActiveTab}>
+    <div className="flex h-full flex-1 flex-col overflow-hidden">
+      <Tabs value={activeTab} className="flex h-full flex-1 flex-col" onValueChange={setActiveTab}>
         {/* 标签页头部 - 固定不滚动 */}
-        <div className="border-b flex items-center w-full" ref={tabContainerRef}>
+        <div className="flex w-full items-center border-b" ref={tabContainerRef}>
           {/* 使用flex-1让标签列表占据所有可用空间 */}
-          <div className="flex-1 flex items-center justify-between">
+          <div className="flex flex-1 items-center justify-between">
             {/* 左侧标签列表 */}
             <div className="flex items-center">
               <TabsList className="h-9">
@@ -421,11 +422,11 @@ export function WorkArea() {
                   <TabsTrigger
                     key={tab.id}
                     value={tab.id}
-                    className="text-xs flex items-center gap-1 relative pr-8 w-[120px]"
+                    className="relative flex w-[120px] items-center gap-1 pr-8 text-xs"
                   >
                     <span className="truncate">{tab.label}</span>
                     <button
-                      className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full hover:bg-muted p-0.5"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full p-0.5 hover:bg-muted"
                       onClick={(e) => closeTab(tab.id, e)}
                     >
                       <svg
@@ -456,19 +457,19 @@ export function WorkArea() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm" className="h-8">
                       <span className="mr-1">更多标签</span>
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-[200px]">
                     {hiddenTabs.map((tab) => (
                       <DropdownMenuItem
                         key={tab.id}
-                        className="flex justify-between items-center"
+                        className="flex items-center justify-between"
                         onClick={() => setActiveTab(tab.id)}
                       >
                         <span className="truncate">{tab.label}</span>
                         <button
-                          className="rounded-full hover:bg-muted p-0.5 ml-2"
+                          className="ml-2 rounded-full p-0.5 hover:bg-muted"
                           onClick={(e) => {
                             e.stopPropagation()
                             closeTab(tab.id, e)
@@ -497,11 +498,11 @@ export function WorkArea() {
               )}
 
               {tabs.length > 0 && (
-                <div className="flex items-center px-2 border-l ml-2">
+                <div className="ml-2 flex items-center border-l px-2">
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8"
+                    className="size-8"
                     onClick={() => {
                       // Close all tabs
                       setTabs([])
@@ -509,7 +510,7 @@ export function WorkArea() {
                     }}
                     title="关闭所有标签页"
                   >
-                    <X className="h-4 w-4" />
+                    <X className="size-4" />
                   </Button>
                 </div>
               )}
@@ -518,14 +519,14 @@ export function WorkArea() {
         </div>
 
         {/* 内容区域 - 可滚动 */}
-        <div className="flex-1 relative overflow-hidden">
+        <div className="relative flex-1 overflow-hidden">
           {tabs.map((tab) => (
             <TabsContent
               key={tab.id}
               value={tab.id}
-              className="absolute inset-0 data-[state=inactive]:hidden h-full overflow-hidden"
+              className="absolute inset-0 h-full overflow-hidden data-[state=inactive]:hidden"
             >
-              <div className="h-full overflow-auto thin-scrollbar">
+              <div className="thin-scrollbar h-full overflow-auto">
                 {tab.type === "gates" && <GatesTable />}
                 {tab.type === "basicEvents" && <BasicEventsTable />}
                 {tab.type === "houseEvents" && <HouseEventsTable />}
@@ -538,7 +539,7 @@ export function WorkArea() {
       </Tabs>
 
       {/* 底部状态栏 - 固定不滚动 */}
-      <div className="h-6 border-t bg-muted/30 px-2 flex items-center text-xs text-muted-foreground">
+      <div className="flex h-6 items-center border-t bg-muted/30 px-2 text-xs text-muted-foreground">
         <span>
           当前视图:{" "}
           {currentTabType === "gates"
@@ -652,7 +653,7 @@ export function WorkArea() {
 
               {/* House event specific fields */}
               {editingElement.type === "houseEvents" && (
-                <div className="flex items-center space-x-2 pt-2 justify-end pr-2">
+                <div className="flex items-center justify-end space-x-2 pr-2 pt-2">
                   <Switch
                     id="element-state"
                     checked={editingElement.data.state || false}

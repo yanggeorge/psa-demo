@@ -1,34 +1,35 @@
 "use client"
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Button } from "@/components/ui/button"
 import {
+  Clipboard,
+  Copy,
+  FileDown,
   FileIcon,
   FileUp,
-  Save,
-  FileDown,
-  Plus,
-  Undo2,
-  Redo2,
-  Scissors,
-  Copy,
-  Clipboard,
-  ZoomOut,
-  ZoomIn,
   Maximize,
   Play,
+  Plus,
+  Redo2,
+  Save,
+  Scissors,
+  Undo2,
+  ZoomIn,
+  ZoomOut,
 } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 export function Toolbar() {
   return (
-    <div className="border-b bg-muted/30 p-1 flex flex-wrap items-center gap-1">
+    <div className="flex flex-wrap items-center gap-1 border-b bg-muted/30 p-1">
       <TooltipProvider>
         {/* 文件操作 */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <FileIcon className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <FileIcon className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -38,8 +39,8 @@ export function Toolbar() {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <FileUp className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <FileUp className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -49,8 +50,8 @@ export function Toolbar() {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Save className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <Save className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -60,8 +61,8 @@ export function Toolbar() {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <FileDown className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <FileDown className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -69,13 +70,13 @@ export function Toolbar() {
           </TooltipContent>
         </Tooltip>
 
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="mx-1 h-6" />
 
         {/* 添加元素 */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Plus className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <Plus className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -83,13 +84,13 @@ export function Toolbar() {
           </TooltipContent>
         </Tooltip>
 
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="mx-1 h-6" />
 
         {/* 编辑操作 */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Undo2 className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <Undo2 className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -99,8 +100,8 @@ export function Toolbar() {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Redo2 className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <Redo2 className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -108,12 +109,12 @@ export function Toolbar() {
           </TooltipContent>
         </Tooltip>
 
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="mx-1 h-6" />
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Scissors className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <Scissors className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -123,8 +124,8 @@ export function Toolbar() {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Copy className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <Copy className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -134,8 +135,8 @@ export function Toolbar() {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Clipboard className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <Clipboard className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -143,13 +144,13 @@ export function Toolbar() {
           </TooltipContent>
         </Tooltip>
 
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="mx-1 h-6" />
 
         {/* 视图操作 */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <ZoomOut className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <ZoomOut className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -159,8 +160,8 @@ export function Toolbar() {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <ZoomIn className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <ZoomIn className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -170,8 +171,8 @@ export function Toolbar() {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Maximize className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <Maximize className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -179,13 +180,13 @@ export function Toolbar() {
           </TooltipContent>
         </Tooltip>
 
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="mx-1 h-6" />
 
         {/* 分析操作 */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Play className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <Play className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>

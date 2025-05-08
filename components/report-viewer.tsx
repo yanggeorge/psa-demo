@@ -8,7 +8,7 @@ interface ReportViewerProps {
 
 export function ReportViewer({ reportName }: ReportViewerProps) {
   return (
-    <div className="h-full w-full overflow-auto thin-scrollbar p-4">
+    <div className="thin-scrollbar size-full overflow-auto p-4">
       <Card>
         <CardHeader>
           <CardTitle>{reportName}</CardTitle>
@@ -24,8 +24,8 @@ export function ReportViewer({ reportName }: ReportViewerProps) {
 
             <div>
               <h3 className="text-lg font-medium">最小割集</h3>
-              <div className="mt-2 border rounded-md p-2">
-                <ul className="list-disc list-inside space-y-1">
+              <div className="mt-2 rounded-md border p-2">
+                <ul className="list-inside list-disc space-y-1">
                   <li>E1, E2</li>
                   <li>E3, E4, E5</li>
                   <li>E6</li>
@@ -43,12 +43,12 @@ export function ReportViewer({ reportName }: ReportViewerProps) {
 
             <div>
               <h3 className="text-lg font-medium">重要度分析</h3>
-              <table className="w-full border-collapse mt-2">
+              <table className="mt-2 w-full border-collapse">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left p-2">事件</th>
-                    <th className="text-left p-2">Birnbaum重要度</th>
-                    <th className="text-left p-2">Fussell-Vesely重要度</th>
+                    <th className="p-2 text-left">事件</th>
+                    <th className="p-2 text-left">Birnbaum重要度</th>
+                    <th className="p-2 text-left">Fussell-Vesely重要度</th>
                   </tr>
                 </thead>
                 <tbody>

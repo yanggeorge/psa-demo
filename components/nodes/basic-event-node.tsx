@@ -16,7 +16,7 @@ export function BasicEventNode({ data, id }: BasicEventNodeProps) {
     <div className="flex flex-col items-center">
       <Handle type="target" position={Position.Top} />
       <div
-        className="w-[100px] h-[100px] rounded-full border-2 border-blue-500 bg-blue-50 flex items-center justify-center shadow-md cursor-pointer"
+        className="flex size-[100px] cursor-pointer items-center justify-center rounded-full border-2 border-blue-500 bg-blue-50 shadow-md"
         onClick={() => data.onClick && data.onClick()}
       >
         <div className="text-center">

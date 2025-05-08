@@ -1,26 +1,28 @@
 "use client"
 
-import { useCallback, useEffect, useState, useRef } from "react"
-import ReactFlow, {
-  MiniMap,
-  Controls,
-  Background,
-  useNodesState,
-  useEdgesState,
-  Panel,
-  MarkerType,
-  Position,
-  type Node,
-  ReactFlowProvider,
-} from "reactflow"
 import "reactflow/dist/style.css"
+
+import { useCallback, useEffect, useRef,useState } from "react"
+import ReactFlow, {
+  Background,
+  Controls,
+  MarkerType,
+  MiniMap,
+  type Node,
+  Panel,
+  Position,
+  ReactFlowProvider,
+  useEdgesState,
+  useNodesState,
+} from "reactflow"
+
 import { Badge } from "@/components/ui/badge"
 import { parseXML } from "@/lib/xml-parser"
-import { NodeEditor } from "./node-editor"
 
+import { NodeEditor } from "./node-editor"
+import { BasicEventNode } from "./nodes/basic-event-node"
 // 自定义节点类型
 import { GateNode } from "./nodes/gate-node"
-import { BasicEventNode } from "./nodes/basic-event-node"
 import { HouseEventNode } from "./nodes/house-event-node"
 
 // 注册自定义节点
@@ -284,7 +286,7 @@ function FlowChart({
   }, [buildNodesAndEdges])
 
   return (
-    <div className="w-full h-full overflow-hidden">
+    <div className="size-full overflow-hidden">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -298,9 +300,9 @@ function FlowChart({
         <Controls />
         <MiniMap />
         <Background variant="dots" gap={12} size={1} />
-        <Panel position="top-left" className="bg-background/80 p-2 rounded-md shadow-md">
+        <Panel position="top-left" className="rounded-md bg-background/80 p-2 shadow-md">
           <h3 className="text-sm font-medium">故障树: {tree.name}</h3>
-          <div className="flex gap-2 mt-2">
+          <div className="mt-2 flex gap-2">
             <Badge variant="outline" className="bg-yellow-100">
               门: {tree.gates.length}
             </Badge>
@@ -368,7 +370,7 @@ export function FaultTreeViewer({ xmlData, initialTreeName }: FaultTreeViewerPro
   }
 
   return (
-    <div className="w-full h-full overflow-auto thin-scrollbar">
+    <div className="thin-scrollbar size-full overflow-auto">
       <ReactFlowProvider>
         <FlowChart tree={currentTree} parsedData={parsedData} onNodeClick={handleNodeClick} />
         {selectedNode && (

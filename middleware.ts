@@ -1,36 +1,15 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { auth } from '@/auth';
 
-export async function middleware(request: NextRequest) {
+export default auth((req, ctx) => {
   // 不需要认证的公共路径
-  const publicPaths = ["/login", "/api/auth"];
+  const publicPaths = ['/login', '/api/auth'];
 
-  const path = request.nextUrl.pathname;
-
-  // 检查路径是否为公共路径
-  if (publicPaths.some((publicPath) => path.startsWith(publicPath))) {
-    return NextResponse.next();
-  }
-
-  // 使用新的环境变量名称
-  const token = await getToken({
-    req: request,
-    secret: process.env.AUTH_SECRET,
-  });
-
-  // 如果没有令牌且尝试访问受保护的路由，则重定向到登录页面
-  if (!token) {
-    const url = new URL("/login", request.url);
-    url.searchParams.set("callbackUrl", encodeURI(request.url));
-    return NextResponse.redirect(url);
-  }
-
-  return NextResponse.next();
-}
+  const path = req.nextUrl.pathname;
+  console.log('🚀 ~ auth ~ path:', path);
+});
 
 export const config = {
   matcher: [
-    "/((?!api/auth|api/env|_next/static|_next/image|favicon.ico).*)", // Exclude /api/env
+    '/((?!api|_next/static|_next/image|favicon.ico).*)', // Exclude /api/env
   ],
 };
