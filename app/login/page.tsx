@@ -2,7 +2,7 @@
 
 import { AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useActionState, useState } from 'react';
+import { FormEvent, useActionState, useState, startTransition } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,18 @@ export default function LoginPage() {
 
   const [errorMessage, formAction, isPending] = useActionState(authenticate, undefined);
 
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('password', password);
+
+    startTransition(() => {
+      formAction(formData);
+    });
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <Card className="w-[350px]">
@@ -26,7 +38,7 @@ export default function LoginPage() {
           <CardDescription className="text-center">请登录以访问系统</CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={formAction} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {errorMessage && (
               <Alert variant="destructive">
                 <AlertCircle className="size-4" />

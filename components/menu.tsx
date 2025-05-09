@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   BarChart,
@@ -21,74 +21,79 @@ import {
   User,
   ZoomIn,
   ZoomOut,
-} from "lucide-react"
-import { signOut, useSession } from "next-auth/react"
-import { useEffect, useRef,useState } from "react"
+} from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useEffect, useRef, useState } from 'react';
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { logOut } from '@/lib/actions';
 export function Menu() {
-  const { data: session } = useSession()
+  const { data: session } = useSession();
 
   // 移动端菜单状态
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [activeMenu, setActiveMenu] = useState<string | null>(null)
-  const menuRef = useRef<HTMLDivElement>(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   // 处理菜单按钮点击
   const handleMenuClick = (menuName: string) => {
     if (activeMenu === menuName) {
       // 如果点击的是当前活跃菜单，则关闭菜单
-      setActiveMenu(null)
+      setActiveMenu(null);
     } else {
       // 否则切换到新菜单
-      setActiveMenu(menuName)
+      setActiveMenu(menuName);
     }
-  }
+  };
 
   // 处理菜单按钮悬停
   const handleMenuHover = (menuName: string) => {
     // 只有当已经有菜单打开时，悬停才会切换菜单
     if (activeMenu !== null) {
-      setActiveMenu(menuName)
+      setActiveMenu(menuName);
     }
-  }
+  };
 
   // 处理菜单项点击
-  const handleMenuItemClick = (action: () => void = () => {}) => {
-    // 执行菜单项的操作
-    action()
+  const handleMenuItemClick = async (action: () => void | Promise<void> = () => {}) => {
+    try {
+      // 统一处理同步和异步函数
+      await Promise.resolve(action());
+    } catch (error) {
+      console.error('Action execution failed:', error);
+    }
+
     // 关闭菜单
-    setActiveMenu(null)
-  }
+    setActiveMenu(null);
+  };
 
   // 处理登出
-  const handleSignOut = () => {
-    signOut({ callbackUrl: "/login" })
-  }
+  const handleSignOut = async () => {
+    await logOut();
+  };
 
   // 点击外部关闭菜单
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setActiveMenu(null)
+        setActiveMenu(null);
       }
-    }
+    };
 
     if (activeMenu !== null) {
-      document.addEventListener("mousedown", handleClickOutside)
+      document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [activeMenu])
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [activeMenu]);
 
   // 渲染菜单内容
   const renderMenuContent = () => {
     switch (activeMenu) {
-      case "file":
+      case 'file':
         return (
           <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
             <Button
@@ -129,8 +134,8 @@ export function Menu() {
               <span>导出模型文件</span>
             </Button>
           </div>
-        )
-      case "edit":
+        );
+      case 'edit':
         return (
           <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
             <Button
@@ -184,14 +189,14 @@ export function Menu() {
               variant="ghost"
               size="sm"
               className="w-full justify-start text-left"
-              onClick={() => handleMenuItemClick(() => console.log("添加元素"))}
+              onClick={() => handleMenuItemClick(() => console.log('添加元素'))}
             >
               <Plus className="mr-2 size-4" />
               <span>添加元素</span>
             </Button>
           </div>
-        )
-      case "view":
+        );
+      case 'view':
         return (
           <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
             <Button
@@ -222,8 +227,8 @@ export function Menu() {
               <span>适中</span>
             </Button>
           </div>
-        )
-      case "analysis":
+        );
+      case 'analysis':
         return (
           <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
             <Button
@@ -236,8 +241,8 @@ export function Menu() {
               <span>运行</span>
             </Button>
           </div>
-        )
-      case "user":
+        );
+      case 'user':
         return (
           <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
             <Button
@@ -260,8 +265,8 @@ export function Menu() {
               <span>退出登录</span>
             </Button>
           </div>
-        )
-      case "settings":
+        );
+      case 'settings':
         return (
           <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
             <Button
@@ -298,11 +303,11 @@ export function Menu() {
               关于
             </Button>
           </div>
-        )
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   return (
     <>
@@ -316,13 +321,13 @@ export function Menu() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={`h-8 ${activeMenu === "file" ? "bg-accent" : ""}`}
-                onClick={() => handleMenuClick("file")}
-                onMouseEnter={() => handleMenuHover("file")}
+                className={`h-8 ${activeMenu === 'file' ? 'bg-accent' : ''}`}
+                onClick={() => handleMenuClick('file')}
+                onMouseEnter={() => handleMenuHover('file')}
               >
                 文件
               </Button>
-              {activeMenu === "file" && renderMenuContent()}
+              {activeMenu === 'file' && renderMenuContent()}
             </div>
 
             {/* 编辑菜单 */}
@@ -330,13 +335,13 @@ export function Menu() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={`h-8 ${activeMenu === "edit" ? "bg-accent" : ""}`}
-                onClick={() => handleMenuClick("edit")}
-                onMouseEnter={() => handleMenuHover("edit")}
+                className={`h-8 ${activeMenu === 'edit' ? 'bg-accent' : ''}`}
+                onClick={() => handleMenuClick('edit')}
+                onMouseEnter={() => handleMenuHover('edit')}
               >
                 编辑
               </Button>
-              {activeMenu === "edit" && renderMenuContent()}
+              {activeMenu === 'edit' && renderMenuContent()}
             </div>
 
             {/* 视图菜单 */}
@@ -344,13 +349,13 @@ export function Menu() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={`h-8 ${activeMenu === "view" ? "bg-accent" : ""}`}
-                onClick={() => handleMenuClick("view")}
-                onMouseEnter={() => handleMenuHover("view")}
+                className={`h-8 ${activeMenu === 'view' ? 'bg-accent' : ''}`}
+                onClick={() => handleMenuClick('view')}
+                onMouseEnter={() => handleMenuHover('view')}
               >
                 视图
               </Button>
-              {activeMenu === "view" && renderMenuContent()}
+              {activeMenu === 'view' && renderMenuContent()}
             </div>
 
             {/* 分析菜单 */}
@@ -358,13 +363,13 @@ export function Menu() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={`h-8 ${activeMenu === "analysis" ? "bg-accent" : ""}`}
-                onClick={() => handleMenuClick("analysis")}
-                onMouseEnter={() => handleMenuHover("analysis")}
+                className={`h-8 ${activeMenu === 'analysis' ? 'bg-accent' : ''}`}
+                onClick={() => handleMenuClick('analysis')}
+                onMouseEnter={() => handleMenuHover('analysis')}
               >
                 分析
               </Button>
-              {activeMenu === "analysis" && renderMenuContent()}
+              {activeMenu === 'analysis' && renderMenuContent()}
             </div>
           </div>
         </div>
@@ -376,15 +381,15 @@ export function Menu() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={`h-8 gap-2 ${activeMenu === "user" ? "bg-accent" : ""}`}
-                onClick={() => handleMenuClick("user")}
+                className={`h-8 gap-2 ${activeMenu === 'user' ? 'bg-accent' : ''}`}
+                onClick={() => handleMenuClick('user')}
               >
                 <Avatar className="size-6">
-                  <AvatarFallback>{session.user?.name?.[0] || "U"}</AvatarFallback>
+                  <AvatarFallback>{session.user?.name?.[0] || 'U'}</AvatarFallback>
                 </Avatar>
-                <span>{session.user?.name || "用户"}</span>
+                <span>{session.user?.name || '用户'}</span>
               </Button>
-              {activeMenu === "user" && renderMenuContent()}
+              {activeMenu === 'user' && renderMenuContent()}
             </div>
           ) : null}
 
@@ -392,12 +397,12 @@ export function Menu() {
             <Button
               variant="ghost"
               size="icon"
-              className={`ml-2 size-8 ${activeMenu === "settings" ? "bg-accent" : ""}`}
-              onClick={() => handleMenuClick("settings")}
+              className={`ml-2 size-8 ${activeMenu === 'settings' ? 'bg-accent' : ''}`}
+              onClick={() => handleMenuClick('settings')}
             >
               <Settings className="size-4" />
             </Button>
-            {activeMenu === "settings" && renderMenuContent()}
+            {activeMenu === 'settings' && renderMenuContent()}
           </div>
         </div>
       </div>
@@ -408,7 +413,7 @@ export function Menu() {
         <div className="flex items-center">
           {session ? (
             <Avatar className="mr-2 size-7">
-              <AvatarFallback>{session.user?.name?.[0] || "U"}</AvatarFallback>
+              <AvatarFallback>{session.user?.name?.[0] || 'U'}</AvatarFallback>
             </Avatar>
           ) : null}
 
@@ -467,5 +472,5 @@ export function Menu() {
         )}
       </div>
     </>
-  )
+  );
 }

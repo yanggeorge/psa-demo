@@ -5,7 +5,7 @@ export default auth((req, ctx) => {
   const publicPaths = ['/login', '/api/auth'];
 
   const path = req.nextUrl.pathname;
-  console.log('🚀 ~ auth ~ path:', path);
+  console.log('🚀 ~ middleware.ts:8 ~ auth ~ path:', path);
 });
 
 export const config = {

@@ -12,6 +12,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         password: { label: '密码', type: 'password' },
       },
       async authorize(credentials) {
+        console.log('🚀 ~ auth.ts:15 ~ authorize ~ credentials:', credentials);
         // 简单的凭证检查
         if (credentials?.username === 'psaadmin' && credentials?.password === '123456') {
           return {
