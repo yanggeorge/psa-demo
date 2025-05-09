@@ -34,7 +34,8 @@ export function Menu() {
   // 移动端菜单状态
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const leftMenuRef = useRef<HTMLDivElement>(null);
+  const rightMenuRef = useRef<HTMLDivElement>(null);
 
   // 处理菜单按钮点击
   const handleMenuClick = (menuName: string) => {
@@ -78,7 +79,12 @@ export function Menu() {
   // 点击外部关闭菜单
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      console.log('handleClickOutside triggered');
+      if (
+        (leftMenuRef.current && !leftMenuRef.current.contains(event.target as Node)) ||
+        (rightMenuRef.current && !rightMenuRef.current.contains(event.target as Node))
+      ) {
+        console.log('Outside click detected, closing menu');
         setActiveMenu(null);
       }
     };
@@ -317,7 +323,7 @@ export function Menu() {
       <div className="hidden justify-between border-b bg-background md:flex">
         <div className="flex items-center">
           <div className="px-4 py-2 font-semibold text-primary">PSA分析</div>
-          <div className="flex items-center space-x-1 p-1" ref={menuRef}>
+          <div className="flex items-center space-x-1 p-1" ref={leftMenuRef}>
             {/* 文件菜单 */}
             <div className="relative">
               <Button
@@ -377,7 +383,7 @@ export function Menu() {
         </div>
 
         {/* 右侧用户和设置 */}
-        <div className="mr-2 flex items-center">
+        <div className="mr-2 flex items-center" ref={rightMenuRef}>
           {session ? (
             <div className="relative">
               <Button
