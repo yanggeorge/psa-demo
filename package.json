@@ -9,9 +9,9 @@
     "lint": "next lint --fix",
     "clean": "rm -rf .next node_modules/.cache",
     "format": "run-script-os",
-    "format:win32": "prettier --config .prettierrc \"./app/**/*.{js,mjs,cjs,ts,tsx,css}\" --write",
-    "format:darwin:linux": "prettier --config .prettierrc 'app/**/*.{js,mjs,cjs,ts,tsx,css}' --write",
-    "format:default": "prettier --config .prettierrc 'app/**/*.{js,mjs,cjs,ts,tsx,css}' --write"
+    "format:win32": "prettier --config .prettierrc . --write",
+    "format:darwin:linux": "prettier --config .prettierrc . --write",
+    "format:default": "prettier --config .prettierrc . --write"
   },
   "dependencies": {
     "@eslint/eslintrc": "^3.3.1",

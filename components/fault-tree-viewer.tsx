@@ -1,8 +1,8 @@
-"use client"
+'use client';
 
-import "reactflow/dist/style.css"
+import 'reactflow/dist/style.css';
 
-import { useCallback, useEffect, useRef,useState } from "react"
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactFlow, {
   Background,
   Controls,
@@ -14,27 +14,27 @@ import ReactFlow, {
   ReactFlowProvider,
   useEdgesState,
   useNodesState,
-} from "reactflow"
+} from 'reactflow';
 
-import { Badge } from "@/components/ui/badge"
-import { parseXML } from "@/lib/xml-parser"
+import { Badge } from '@/components/ui/badge';
+import { parseXML } from '@/lib/xml-parser';
 
-import { NodeEditor } from "./node-editor"
-import { BasicEventNode } from "./nodes/basic-event-node"
+import { NodeEditor } from './node-editor';
+import { BasicEventNode } from './nodes/basic-event-node';
 // 自定义节点类型
-import { GateNode } from "./nodes/gate-node"
-import { HouseEventNode } from "./nodes/house-event-node"
+import { GateNode } from './nodes/gate-node';
+import { HouseEventNode } from './nodes/house-event-node';
 
 // 注册自定义节点
 const nodeTypes = {
   gate: GateNode,
   basicEvent: BasicEventNode,
   houseEvent: HouseEventNode,
-}
+};
 
 interface FaultTreeViewerProps {
-  xmlData: string
-  initialTreeName?: string
+  xmlData: string;
+  initialTreeName?: string;
 }
 
 // 内部流程图组件，使用ReactFlow钩子
@@ -43,39 +43,39 @@ function FlowChart({
   parsedData,
   onNodeClick,
 }: {
-  tree: any
-  parsedData: any
-  onNodeClick: (node: Node) => void
+  tree: any;
+  parsedData: any;
+  onNodeClick: (node: Node) => void;
 }) {
-  const [nodes, setNodes, onNodesChange] = useNodesState([])
-  const [edges, setEdges, onEdgesChange] = useEdgesState([])
-  const [viewportDimensions, setViewportDimensions] = useState({ width: 0, height: 0 })
-  const reactFlowWrapper = useRef<HTMLDivElement>(null)
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [viewportDimensions, setViewportDimensions] = useState({ width: 0, height: 0 });
+  const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
   // 监听视口尺寸变化
   useEffect(() => {
     const updateViewportDimensions = () => {
       if (reactFlowWrapper.current) {
-        const { width, height } = reactFlowWrapper.current.getBoundingClientRect()
-        setViewportDimensions({ width, height })
+        const { width, height } = reactFlowWrapper.current.getBoundingClientRect();
+        setViewportDimensions({ width, height });
       }
-    }
+    };
 
-    updateViewportDimensions()
-    window.addEventListener("resize", updateViewportDimensions)
+    updateViewportDimensions();
+    window.addEventListener('resize', updateViewportDimensions);
 
     return () => {
-      window.removeEventListener("resize", updateViewportDimensions)
-    }
-  }, [])
+      window.removeEventListener('resize', updateViewportDimensions);
+    };
+  }, []);
 
   // 构建节点和边
   const buildNodesAndEdges = useCallback(() => {
-    if (!parsedData || !tree) return
+    if (!parsedData || !tree) return;
 
-    const newNodes: any[] = []
-    const newEdges: any[] = []
-    const processedNodes = new Set()
+    const newNodes: any[] = [];
+    const newEdges: any[] = [];
+    const processedNodes = new Set();
 
     // 递归构建节点和边
     const processNode = (nodeName: string, x: number, y: number, parentId?: string): string => {
@@ -86,20 +86,20 @@ function FlowChart({
             id: `e-${parentId}-${nodeName}`,
             source: parentId,
             target: nodeName,
-            type: "smoothstep",
+            type: 'smoothstep',
             markerEnd: { type: MarkerType.ArrowClosed },
-          })
+          });
         }
-        return nodeName
+        return nodeName;
       }
 
       // 查找门
-      const gate = parsedData.gates.find((g: any) => g.name === nodeName)
+      const gate = parsedData.gates.find((g: any) => g.name === nodeName);
       if (gate) {
         // 添加门节点
         newNodes.push({
           id: nodeName,
-          type: "gate",
+          type: 'gate',
           position: { x, y },
           data: {
             label: gate.label || gate.name,
@@ -108,8 +108,8 @@ function FlowChart({
           },
           sourcePosition: Position.Bottom,
           targetPosition: Position.Top,
-        })
-        processedNodes.add(nodeName)
+        });
+        processedNodes.add(nodeName);
 
         // 如果有父节点，添加边
         if (parentId) {
@@ -117,30 +117,30 @@ function FlowChart({
             id: `e-${parentId}-${nodeName}`,
             source: parentId,
             target: nodeName,
-            type: "smoothstep",
+            type: 'smoothstep',
             markerEnd: { type: MarkerType.ArrowClosed },
-          })
+          });
         }
 
         // 处理子节点
-        const childSpacing = 180
-        const startX = x - ((gate.children.length - 1) * childSpacing) / 2
+        const childSpacing = 180;
+        const startX = x - ((gate.children.length - 1) * childSpacing) / 2;
 
         gate.children.forEach((child: string, index: number) => {
-          const childX = startX + index * childSpacing
-          const childY = y + 150
-          processNode(child, childX, childY, nodeName)
-        })
+          const childX = startX + index * childSpacing;
+          const childY = y + 150;
+          processNode(child, childX, childY, nodeName);
+        });
 
-        return nodeName
+        return nodeName;
       }
 
       // 查找基本事件
-      const basicEvent = parsedData.basicEvents.find((e: any) => e.name === nodeName)
+      const basicEvent = parsedData.basicEvents.find((e: any) => e.name === nodeName);
       if (basicEvent) {
         newNodes.push({
           id: nodeName,
-          type: "basicEvent",
+          type: 'basicEvent',
           position: { x, y },
           data: {
             label: basicEvent.label || basicEvent.name,
@@ -148,28 +148,28 @@ function FlowChart({
             onClick: () => {}, // 这里会在渲染后被覆盖
           },
           targetPosition: Position.Top,
-        })
-        processedNodes.add(nodeName)
+        });
+        processedNodes.add(nodeName);
 
         if (parentId) {
           newEdges.push({
             id: `e-${parentId}-${nodeName}`,
             source: parentId,
             target: nodeName,
-            type: "smoothstep",
+            type: 'smoothstep',
             markerEnd: { type: MarkerType.ArrowClosed },
-          })
+          });
         }
 
-        return nodeName
+        return nodeName;
       }
 
       // 查找房屋事件
-      const houseEvent = parsedData.houseEvents.find((e: any) => e.name === nodeName)
+      const houseEvent = parsedData.houseEvents.find((e: any) => e.name === nodeName);
       if (houseEvent) {
         newNodes.push({
           id: nodeName,
-          type: "houseEvent",
+          type: 'houseEvent',
           position: { x, y },
           data: {
             label: houseEvent.label || houseEvent.name,
@@ -177,28 +177,28 @@ function FlowChart({
             onClick: () => {}, // 这里会在渲染后被覆盖
           },
           targetPosition: Position.Top,
-        })
-        processedNodes.add(nodeName)
+        });
+        processedNodes.add(nodeName);
 
         if (parentId) {
           newEdges.push({
             id: `e-${parentId}-${nodeName}`,
             source: parentId,
             target: nodeName,
-            type: "smoothstep",
+            type: 'smoothstep',
             markerEnd: { type: MarkerType.ArrowClosed },
-          })
+          });
         }
 
-        return nodeName
+        return nodeName;
       }
 
       // 如果找不到节点，可能是引用了另一棵树中的门
-      const referencedGate = parsedData.gates.find((g: any) => g.name === nodeName)
+      const referencedGate = parsedData.gates.find((g: any) => g.name === nodeName);
       if (referencedGate) {
         newNodes.push({
           id: nodeName,
-          type: "gate",
+          type: 'gate',
           position: { x, y },
           data: {
             label: referencedGate.label || referencedGate.name,
@@ -208,20 +208,20 @@ function FlowChart({
           },
           sourcePosition: Position.Bottom,
           targetPosition: Position.Top,
-        })
-        processedNodes.add(nodeName)
+        });
+        processedNodes.add(nodeName);
 
         if (parentId) {
           newEdges.push({
             id: `e-${parentId}-${nodeName}`,
             source: parentId,
             target: nodeName,
-            type: "smoothstep",
+            type: 'smoothstep',
             markerEnd: { type: MarkerType.ArrowClosed },
-          })
+          });
         }
 
-        return nodeName
+        return nodeName;
       }
 
       // 未知节点
@@ -233,39 +233,39 @@ function FlowChart({
           onClick: () => {}, // 这里会在渲染后被覆盖
         },
         targetPosition: Position.Top,
-      })
-      processedNodes.add(nodeName)
+      });
+      processedNodes.add(nodeName);
 
       if (parentId) {
         newEdges.push({
           id: `e-${parentId}-${nodeName}`,
           source: parentId,
           target: nodeName,
-          type: "smoothstep",
+          type: 'smoothstep',
           markerEnd: { type: MarkerType.ArrowClosed },
-        })
+        });
       }
 
-      return nodeName
-    }
+      return nodeName;
+    };
 
     // 从顶层门开始构建
     const topGates = tree.gates.filter((g: any) => {
       // 顶层门是那些没有被其他门引用的门
-      const isReferenced = tree.gates.some((otherGate: any) => otherGate.children.includes(g.name))
-      return !isReferenced
-    })
+      const isReferenced = tree.gates.some((otherGate: any) => otherGate.children.includes(g.name));
+      return !isReferenced;
+    });
 
     // 如果是空树或没有顶层门，创建一个空白画布
     if (topGates.length === 0) {
-      setNodes([])
-      setEdges([])
-      return
+      setNodes([]);
+      setEdges([]);
+      return;
     }
 
     topGates.forEach((gate: any, index: number) => {
-      processNode(gate.name, 400, 100 + index * 300)
-    })
+      processNode(gate.name, 400, 100 + index * 300);
+    });
 
     // 添加点击事件处理
     const nodesWithClickHandlers = newNodes.map((node) => ({
@@ -274,16 +274,16 @@ function FlowChart({
         ...node.data,
         onClick: () => onNodeClick(node),
       },
-    }))
+    }));
 
-    setNodes(nodesWithClickHandlers)
-    setEdges(newEdges)
-  }, [parsedData, tree, setNodes, setEdges, onNodeClick])
+    setNodes(nodesWithClickHandlers);
+    setEdges(newEdges);
+  }, [parsedData, tree, setNodes, setEdges, onNodeClick]);
 
   // 构建节点和边
   useEffect(() => {
-    buildNodesAndEdges()
-  }, [buildNodesAndEdges])
+    buildNodesAndEdges();
+  }, [buildNodesAndEdges]);
 
   return (
     <div className="size-full overflow-hidden">
@@ -316,57 +316,57 @@ function FlowChart({
         </Panel>
       </ReactFlow>
     </div>
-  )
+  );
 }
 
 export function FaultTreeViewer({ xmlData, initialTreeName }: FaultTreeViewerProps) {
-  const [parsedData, setParsedData] = useState<any>(null)
-  const [activeTree, setActiveTree] = useState<string>("")
-  const [error, setError] = useState<string | null>(null)
-  const [selectedNode, setSelectedNode] = useState<Node | null>(null)
-  const [viewportDimensions, setViewportDimensions] = useState({ width: 0, height: 0 })
+  const [parsedData, setParsedData] = useState<any>(null);
+  const [activeTree, setActiveTree] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [viewportDimensions, setViewportDimensions] = useState({ width: 0, height: 0 });
 
   // 解析XML数据
   useEffect(() => {
     try {
-      const data = parseXML(xmlData)
-      setParsedData(data)
+      const data = parseXML(xmlData);
+      setParsedData(data);
 
       // 设置默认活动树
       if (initialTreeName) {
-        setActiveTree(initialTreeName)
+        setActiveTree(initialTreeName);
       } else if (data.faultTrees && data.faultTrees.length > 0) {
-        setActiveTree(data.faultTrees[0].name)
+        setActiveTree(data.faultTrees[0].name);
       }
     } catch (err) {
-      setError("解析XML数据时出错")
-      console.error(err)
+      setError('解析XML数据时出错');
+      console.error(err);
     }
-  }, [xmlData, initialTreeName])
+  }, [xmlData, initialTreeName]);
 
   // 处理节点点击
   const handleNodeClick = (node: Node) => {
-    setSelectedNode(node)
-  }
+    setSelectedNode(node);
+  };
 
   // 更新节点数据
   const handleNodeUpdate = (updatedNode: Node) => {
     // 节点更新逻辑将在FlowChart组件内部处理
-    setSelectedNode(null)
-  }
+    setSelectedNode(null);
+  };
 
   if (error) {
-    return <div className="p-4 text-red-500">{error}</div>
+    return <div className="p-4 text-red-500">{error}</div>;
   }
 
   if (!parsedData) {
-    return <div className="p-4">加载中...</div>
+    return <div className="p-4">加载中...</div>;
   }
 
   // 获取当前活动的树
-  const currentTree = parsedData.faultTrees.find((t: any) => t.name === activeTree)
+  const currentTree = parsedData.faultTrees.find((t: any) => t.name === activeTree);
   if (!currentTree) {
-    return <div className="p-4">找不到故障树: {activeTree}</div>
+    return <div className="p-4">找不到故障树: {activeTree}</div>;
   }
 
   return (
@@ -383,5 +383,5 @@ export function FaultTreeViewer({ xmlData, initialTreeName }: FaultTreeViewerPro
         )}
       </ReactFlowProvider>
     </div>
-  )
+  );
 }

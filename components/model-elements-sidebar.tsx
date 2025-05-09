@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   ChevronDown,
@@ -10,16 +10,16 @@ import {
   Network,
   Plus,
   Search,
-} from "lucide-react"
-import { useEffect,useState } from "react"
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Dialog, DialogContent, DialogFooter,DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { parseXML } from "@/lib/xml-parser"
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { parseXML } from '@/lib/xml-parser';
 
 // 示例XML数据 - 增加了更多的基本事件（B3到B20）
 const sampleXmlData = `<?xml version="1.0" encoding="UTF-8"?>
@@ -132,115 +132,115 @@ const sampleXmlData = `<?xml version="1.0" encoding="UTF-8"?>
       <constant value="false"/>
     </define-house-event>
   </model-data>
-</opsa-mef>`
+</opsa-mef>`;
 
 export function ModelElementsSidebar() {
-  const [collapsed, setCollapsed] = useState(false)
-  const [parsedData, setParsedData] = useState<any>(null)
-  const [gatesExpanded, setGatesExpanded] = useState(false)
-  const [basicEventsExpanded, setBasicEventsExpanded] = useState(true) // 默认展开基本事件
-  const [houseEventsExpanded, setHouseEventsExpanded] = useState(false)
-  const [filterText, setFilterText] = useState("")
-  const [editDialogOpen, setEditDialogOpen] = useState(false)
-  const [editingElement, setEditingElement] = useState<any>(null)
-  const [isNewTreeDialogOpen, setIsNewTreeDialogOpen] = useState(false)
-  const [newTreeName, setNewTreeName] = useState("")
+  const [collapsed, setCollapsed] = useState(false);
+  const [parsedData, setParsedData] = useState<any>(null);
+  const [gatesExpanded, setGatesExpanded] = useState(false);
+  const [basicEventsExpanded, setBasicEventsExpanded] = useState(true); // 默认展开基本事件
+  const [houseEventsExpanded, setHouseEventsExpanded] = useState(false);
+  const [filterText, setFilterText] = useState('');
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingElement, setEditingElement] = useState<any>(null);
+  const [isNewTreeDialogOpen, setIsNewTreeDialogOpen] = useState(false);
+  const [newTreeName, setNewTreeName] = useState('');
 
   // 解析XML数据
   useEffect(() => {
     try {
-      const data = parseXML(sampleXmlData)
-      setParsedData(data)
+      const data = parseXML(sampleXmlData);
+      setParsedData(data);
     } catch (err) {
-      console.error("解析XML数据时出错:", err)
+      console.error('解析XML数据时出错:', err);
     }
-  }, [])
+  }, []);
 
   // 当侧边栏状态改变时，发送自定义事件
   useEffect(() => {
     // 发送侧边栏状态变化事件
-    const event = new CustomEvent("leftSidebarToggle", {
+    const event = new CustomEvent('leftSidebarToggle', {
       detail: { collapsed },
-    })
-    window.dispatchEvent(event)
-  }, [collapsed])
+    });
+    window.dispatchEvent(event);
+  }, [collapsed]);
 
   // Update the openElementTab function to handle tab opening for different element types
   const openElementTab = (elementType: string) => {
     // Create a custom event to open the correct element type tab
-    const event = new CustomEvent("openElementTab", {
+    const event = new CustomEvent('openElementTab', {
       detail: { elementType },
-    })
-    window.dispatchEvent(event)
-  }
+    });
+    window.dispatchEvent(event);
+  };
 
   // Add a new function for double-click to edit specific elements
   const editElement = (elementType: string, elementId: string) => {
     // Create a custom event to open the edit dialog for specific element
-    const event = new CustomEvent("editElement", {
+    const event = new CustomEvent('editElement', {
       detail: { elementType, elementId },
-    })
-    window.dispatchEvent(event)
-  }
+    });
+    window.dispatchEvent(event);
+  };
 
   // 打开特定元素
   const openElement = (elementType: string, elementId: string) => {
     // 这里可以实现定位到特定元素的逻辑
-    console.log(`打开元素: ${elementType} - ${elementId}`)
+    console.log(`打开元素: ${elementType} - ${elementId}`);
     // 先打开对应的标签页
-    openElementTab(elementType)
+    openElementTab(elementType);
     // 然后可以发送另一个事件，让工作区定位到特定元素
-    const event = new CustomEvent("locateElement", {
+    const event = new CustomEvent('locateElement', {
       detail: { elementType, elementId },
-    })
-    window.dispatchEvent(event)
-  }
+    });
+    window.dispatchEvent(event);
+  };
 
   // 打开特定故障树标签页
   const openFaultTreeTab = (treeName: string) => {
-    const event = new CustomEvent("openFaultTreeTab", {
+    const event = new CustomEvent('openFaultTreeTab', {
       detail: { treeName },
-    })
-    window.dispatchEvent(event)
-  }
+    });
+    window.dispatchEvent(event);
+  };
 
   // 创建新故障树
   const createNewFaultTree = () => {
-    if (!newTreeName.trim()) return
+    if (!newTreeName.trim()) return;
 
     // 创建新故障树事件
-    const event = new CustomEvent("createFaultTree", {
+    const event = new CustomEvent('createFaultTree', {
       detail: { treeName: newTreeName },
-    })
-    window.dispatchEvent(event)
+    });
+    window.dispatchEvent(event);
 
     // 重置状态
-    setNewTreeName("")
-    setIsNewTreeDialogOpen(false)
-  }
+    setNewTreeName('');
+    setIsNewTreeDialogOpen(false);
+  };
 
   // 过滤元素
-  const filterElements = (items: any[], nameKey = "name") => {
-    if (!filterText) return items
+  const filterElements = (items: any[], nameKey = 'name') => {
+    if (!filterText) return items;
     return items.filter(
       (item) =>
         item[nameKey].toLowerCase().includes(filterText.toLowerCase()) ||
         (item.label && item.label.toLowerCase().includes(filterText.toLowerCase())),
-    )
-  }
+    );
+  };
 
   // 过滤后的数据
-  const filteredTrees = parsedData ? filterElements(parsedData.faultTrees) : []
-  const filteredGates = parsedData ? filterElements(parsedData.gates) : []
-  const filteredBasicEvents = parsedData ? filterElements(parsedData.basicEvents) : []
-  const filteredHouseEvents = parsedData ? filterElements(parsedData.houseEvents) : []
+  const filteredTrees = parsedData ? filterElements(parsedData.faultTrees) : [];
+  const filteredGates = parsedData ? filterElements(parsedData.gates) : [];
+  const filteredBasicEvents = parsedData ? filterElements(parsedData.basicEvents) : [];
+  const filteredHouseEvents = parsedData ? filterElements(parsedData.houseEvents) : [];
 
   return (
     <div
-      className={`border-r bg-muted/20 transition-all ${collapsed ? "w-12" : "w-64"} flex h-full flex-col overflow-hidden`}
+      className={`border-r bg-muted/20 transition-all ${collapsed ? 'w-12' : 'w-64'} flex h-full flex-col overflow-hidden`}
     >
       <div className="flex items-center justify-between border-b p-2">
-        <h2 className={`text-sm font-medium ${collapsed ? "hidden" : "block"}`}>模型元素</h2>
+        <h2 className={`text-sm font-medium ${collapsed ? 'hidden' : 'block'}`}>模型元素</h2>
         <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="size-7">
           {collapsed ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
         </Button>
@@ -308,7 +308,7 @@ export function ModelElementsSidebar() {
                 <Badge variant="outline" className="mr-2 text-xs">
                   {filteredGates.length || 0}
                 </Badge>
-                <ChevronDown className={`size-4 transition-transform ${gatesExpanded ? "rotate-180" : ""}`} />
+                <ChevronDown className={`size-4 transition-transform ${gatesExpanded ? 'rotate-180' : ''}`} />
               </div>
             </CollapsibleTrigger>
             <CollapsibleContent>
@@ -319,10 +319,10 @@ export function ModelElementsSidebar() {
                     variant="ghost"
                     size="sm"
                     className="h-7 w-full justify-start text-xs"
-                    onClick={() => openElement("gates", gate.name)}
+                    onClick={() => openElement('gates', gate.name)}
                     onDoubleClick={() => {
-                      setEditingElement(gate)
-                      setEditDialogOpen(true)
+                      setEditingElement(gate);
+                      setEditDialogOpen(true);
                     }}
                   >
                     <span className="truncate">{gate.name}</span>
@@ -343,7 +343,7 @@ export function ModelElementsSidebar() {
                 <Badge variant="outline" className="mr-2 text-xs">
                   {filteredBasicEvents.length || 0}
                 </Badge>
-                <ChevronDown className={`size-4 transition-transform ${basicEventsExpanded ? "rotate-180" : ""}`} />
+                <ChevronDown className={`size-4 transition-transform ${basicEventsExpanded ? 'rotate-180' : ''}`} />
               </div>
             </CollapsibleTrigger>
             <CollapsibleContent>
@@ -354,10 +354,10 @@ export function ModelElementsSidebar() {
                     variant="ghost"
                     size="sm"
                     className="h-7 w-full justify-start text-xs"
-                    onClick={() => openElement("basicEvents", event.name)}
+                    onClick={() => openElement('basicEvents', event.name)}
                     onDoubleClick={() => {
-                      setEditingElement(event)
-                      setEditDialogOpen(true)
+                      setEditingElement(event);
+                      setEditDialogOpen(true);
                     }}
                   >
                     <span className="truncate">{event.name}</span>
@@ -378,7 +378,7 @@ export function ModelElementsSidebar() {
                 <Badge variant="outline" className="mr-2 text-xs">
                   {filteredHouseEvents.length || 0}
                 </Badge>
-                <ChevronDown className={`size-4 transition-transform ${houseEventsExpanded ? "rotate-180" : ""}`} />
+                <ChevronDown className={`size-4 transition-transform ${houseEventsExpanded ? 'rotate-180' : ''}`} />
               </div>
             </CollapsibleTrigger>
             <CollapsibleContent>
@@ -389,14 +389,14 @@ export function ModelElementsSidebar() {
                     variant="ghost"
                     size="sm"
                     className="h-7 w-full justify-start text-xs"
-                    onClick={() => openElement("houseEvents", event.name)}
+                    onClick={() => openElement('houseEvents', event.name)}
                     onDoubleClick={() => {
-                      setEditingElement(event)
-                      setEditDialogOpen(true)
+                      setEditingElement(event);
+                      setEditDialogOpen(true);
                     }}
                   >
                     <span className="truncate">{event.name}</span>
-                    <span className="ml-2 text-xs text-muted-foreground">({event.state ? "TRUE" : "FALSE"})</span>
+                    <span className="ml-2 text-xs text-muted-foreground">({event.state ? 'TRUE' : 'FALSE'})</span>
                   </Button>
                 ))}
               </div>
@@ -409,25 +409,19 @@ export function ModelElementsSidebar() {
             variant="ghost"
             size="icon"
             className="size-8"
-            onClick={() => openElementTab("faultTreeViewer")}
+            onClick={() => openElementTab('faultTreeViewer')}
             title="故障树列表"
           >
             <Network className="size-4" />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-8"
-            onClick={() => openElementTab("gates")}
-            title="门列表"
-          >
+          <Button variant="ghost" size="icon" className="size-8" onClick={() => openElementTab('gates')} title="门列表">
             <Gate className="size-4" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
             className="size-8"
-            onClick={() => openElementTab("basicEvents")}
+            onClick={() => openElementTab('basicEvents')}
             title="基本事件列表"
           >
             <Circle className="size-4" />
@@ -436,7 +430,7 @@ export function ModelElementsSidebar() {
             variant="ghost"
             size="icon"
             className="size-8"
-            onClick={() => openElementTab("houseEvents")}
+            onClick={() => openElementTab('houseEvents')}
             title="房屋事件列表"
           >
             <Home className="size-4" />
@@ -481,11 +475,11 @@ export function ModelElementsSidebar() {
             <>
               <DialogHeader>
                 <DialogTitle>
-                  {editingElement.type === "and" || editingElement.type === "or"
-                    ? "编辑门"
-                    : "probability" in editingElement
-                      ? "编辑基本事件"
-                      : "编辑房屋事件"}
+                  {editingElement.type === 'and' || editingElement.type === 'or'
+                    ? '编辑门'
+                    : 'probability' in editingElement
+                      ? '编辑基本事件'
+                      : '编辑房屋事件'}
                 </DialogTitle>
               </DialogHeader>
               <div className="grid gap-4 py-4">
@@ -493,7 +487,7 @@ export function ModelElementsSidebar() {
                   <Label htmlFor="edit-id" className="text-right">
                     ID
                   </Label>
-                  <Input id="edit-id" value={editingElement.name || ""} className="col-span-3" readOnly />
+                  <Input id="edit-id" value={editingElement.name || ''} className="col-span-3" readOnly />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="edit-label" className="text-right">
@@ -501,13 +495,13 @@ export function ModelElementsSidebar() {
                   </Label>
                   <Input
                     id="edit-label"
-                    value={editingElement.label || ""}
+                    value={editingElement.label || ''}
                     onChange={(e) => setEditingElement({ ...editingElement, label: e.target.value })}
                     className="col-span-3"
                   />
                 </div>
                 {/* 门特有的字段 */}
-                {"type" in editingElement && (
+                {'type' in editingElement && (
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="edit-type" className="text-right">
                       类型
@@ -528,7 +522,7 @@ export function ModelElementsSidebar() {
                   </div>
                 )}
                 {/* 基本事件特有的字段 */}
-                {"probability" in editingElement && (
+                {'probability' in editingElement && (
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="edit-probability" className="text-right">
                       概率
@@ -548,7 +542,7 @@ export function ModelElementsSidebar() {
                   </div>
                 )}
                 {/* 房屋事件特有的字段 */}
-                {"state" in editingElement && (
+                {'state' in editingElement && (
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="edit-state" className="text-right">
                       状态
@@ -561,7 +555,7 @@ export function ModelElementsSidebar() {
                         onChange={(e) => setEditingElement({ ...editingElement, state: e.target.checked })}
                         className="mr-2"
                       />
-                      <span>{editingElement.state ? "TRUE" : "FALSE"}</span>
+                      <span>{editingElement.state ? 'TRUE' : 'FALSE'}</span>
                     </div>
                   </div>
                 )}
@@ -572,8 +566,8 @@ export function ModelElementsSidebar() {
                 </Button>
                 <Button
                   onClick={() => {
-                    console.log("保存编辑的元素:", editingElement)
-                    setEditDialogOpen(false)
+                    console.log('保存编辑的元素:', editingElement);
+                    setEditDialogOpen(false);
                   }}
                 >
                   保存
@@ -584,5 +578,5 @@ export function ModelElementsSidebar() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

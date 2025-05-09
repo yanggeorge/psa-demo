@@ -1,0 +1,84 @@
+# Prettier ignores files matching the following patterns.
+# https://prettier.io/docs/en/ignore.html
+
+# 依赖管理
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# 构建输出
+dist/
+build/
+out/
+.next/
+.nuxt/
+.vercel/
+netlify/
+storybook-static/
+docs/
+
+# 缓存和临时文件
+.cache/
+temp/
+tmp/
+*.log
+*.local
+*.backup
+*.dump
+*.DS_Store
+.env*.local
+
+# 编辑器和 IDE 相关
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# 系统生成的文件
+Thumbs.db
+
+# 大型资源文件 (根据你的项目调整)
+*.svg
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.woff
+*.woff2
+*.ttf
+*.eot
+*.mp4
+*.webm
+*.avi
+*.mov
+*.mp3
+*.wav
+
+# 文档和静态资源 (如果 Prettier 不需要格式化)
+README.md
+LICENSE
+CHANGELOG.md
+public/
+static/
+
+# Git 相关 (通常不需要，但以防万一)
+.git
+
+# 其他工具或框架特定的忽略 (根据你的项目调整)
+# 例如：Angular 的 dist 目录
+# angular/dist/
+
+# 例如：VuePress 的 .vuepress/dist 目录
+# .vuepress/dist/
+
+# 例如：Jest 的 coverage 目录
+# coverage/
+
+# 自定义忽略 (根据你的具体需求添加)
+# 例如：忽略某个特定的文件
+# config/local.json

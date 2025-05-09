@@ -1,14 +1,14 @@
-"use client"
+'use client';
 
-import { Handle, Position } from "reactflow"
+import { Handle, Position } from 'reactflow';
 
 interface BasicEventNodeProps {
   data: {
-    label: string
-    probability: number
-    onClick?: () => void
-  }
-  id: string
+    label: string;
+    probability: number;
+    onClick?: () => void;
+  };
+  id: string;
 }
 
 export function BasicEventNode({ data, id }: BasicEventNodeProps) {
@@ -25,5 +25,5 @@ export function BasicEventNode({ data, id }: BasicEventNodeProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

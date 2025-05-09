@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   Clipboard,
@@ -15,11 +15,11 @@ import {
   Undo2,
   ZoomIn,
   ZoomOut,
-} from "lucide-react"
+} from 'lucide-react';
 
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export function Toolbar() {
   return (
@@ -195,5 +195,5 @@ export function Toolbar() {
         </Tooltip>
       </TooltipProvider>
     </div>
-  )
+  );
 }

@@ -1,9 +1,9 @@
-"use client"
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface ReportViewerProps {
-  reportName: string
+  reportName: string;
 }
 
 export function ReportViewer({ reportName }: ReportViewerProps) {
@@ -74,5 +74,5 @@ export function ReportViewer({ reportName }: ReportViewerProps) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

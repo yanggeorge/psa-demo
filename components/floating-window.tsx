@@ -1,28 +1,28 @@
-"use client"
+'use client';
 
-import { Maximize, Minimize, Move,X } from "lucide-react"
-import type React from "react"
-import { useState } from "react"
+import { Maximize, Minimize, Move, X } from 'lucide-react';
+import type React from 'react';
+import { useState } from 'react';
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export function FloatingWindow() {
-  const [position, setPosition] = useState({ x: 100, y: 100 })
-  const [isDragging, setIsDragging] = useState(false)
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
-  const [isMinimized, setIsMinimized] = useState(false)
-  const [isMaximized, setIsMaximized] = useState(false)
-  const [isVisible, setIsVisible] = useState(true)
+  const [position, setPosition] = useState({ x: 100, y: 100 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   // 处理拖拽开始
   const handleDragStart = (e: React.MouseEvent) => {
-    setIsDragging(true)
+    setIsDragging(true);
     setDragStart({
       x: e.clientX - position.x,
       y: e.clientY - position.y,
-    })
-  }
+    });
+  };
 
   // 处理拖拽中
   const handleDrag = (e: React.MouseEvent) => {
@@ -30,44 +30,44 @@ export function FloatingWindow() {
       setPosition({
         x: e.clientX - dragStart.x,
         y: e.clientY - dragStart.y,
-      })
+      });
     }
-  }
+  };
 
   // 处理拖拽结束
   const handleDragEnd = () => {
-    setIsDragging(false)
-  }
+    setIsDragging(false);
+  };
 
   // 处理窗口最小化
   const handleMinimize = () => {
-    setIsMinimized(!isMinimized)
-    setIsMaximized(false)
-  }
+    setIsMinimized(!isMinimized);
+    setIsMaximized(false);
+  };
 
   // 处理窗口最大化
   const handleMaximize = () => {
-    setIsMaximized(!isMaximized)
-    setIsMinimized(false)
-  }
+    setIsMaximized(!isMaximized);
+    setIsMinimized(false);
+  };
 
   // 处理窗口关闭
   const handleClose = () => {
-    setIsVisible(false)
-  }
+    setIsVisible(false);
+  };
 
-  if (!isVisible) return null
+  if (!isVisible) return null;
 
   return (
     <div
-      className={`absolute ${isMaximized ? "inset-0" : ""}`}
+      className={`absolute ${isMaximized ? 'inset-0' : ''}`}
       style={
         isMaximized
           ? {}
           : {
               left: `${position.x}px`,
               top: `${position.y}px`,
-              width: isMinimized ? "200px" : "300px",
+              width: isMinimized ? '200px' : '300px',
             }
       }
     >
@@ -119,5 +119,5 @@ export function FloatingWindow() {
         )}
       </Card>
     </div>
-  )
+  );
 }

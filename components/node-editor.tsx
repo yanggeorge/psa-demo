@@ -1,54 +1,54 @@
-"use client"
+'use client';
 
-import { Maximize,Minimize, X } from "lucide-react"
-import type React from "react"
-import { useEffect,useState } from "react"
+import { Maximize, Minimize, X } from 'lucide-react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 
 interface NodeEditorProps {
-  node: any
-  onClose: () => void
-  onUpdate: (updatedNode: any) => void
-  viewportDimensions: { width: number; height: number }
+  node: any;
+  onClose: () => void;
+  onUpdate: (updatedNode: any) => void;
+  viewportDimensions: { width: number; height: number };
 }
 
 export function NodeEditor({ node, onClose, onUpdate, viewportDimensions }: NodeEditorProps) {
-  const [nodeData, setNodeData] = useState<any>(node)
-  const [isMinimized, setIsMinimized] = useState(false)
-  const [isMaximized, setIsMaximized] = useState(false)
+  const [nodeData, setNodeData] = useState<any>(node);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
 
   useEffect(() => {
-    setNodeData(node)
-  }, [node])
+    setNodeData(node);
+  }, [node]);
 
   // 处理窗口最小化
   const handleMinimize = () => {
-    setIsMinimized(!isMinimized)
-    setIsMaximized(false)
-  }
+    setIsMinimized(!isMinimized);
+    setIsMaximized(false);
+  };
 
   // 处理窗口最大化
   const handleMaximize = () => {
-    setIsMaximized(!isMaximized)
-    setIsMinimized(false)
-  }
+    setIsMaximized(!isMaximized);
+    setIsMinimized(false);
+  };
 
   // 处理更新
   const handleUpdate = () => {
-    onUpdate(nodeData)
-  }
+    onUpdate(nodeData);
+  };
 
   // 根据节点类型渲染不同的编辑表单
   const renderEditorContent = () => {
-    if (isMinimized) return null
+    if (isMinimized) return null;
 
-    if (node.type === "gate") {
+    if (node.type === 'gate') {
       return (
         <div className="space-y-4">
           <div className="space-y-2">
@@ -91,7 +91,7 @@ export function NodeEditor({ node, onClose, onUpdate, viewportDimensions }: Node
               </SelectContent>
             </Select>
           </div>
-          {(nodeData.data.type === "atleast" || nodeData.data.type === "cardinality") && (
+          {(nodeData.data.type === 'atleast' || nodeData.data.type === 'cardinality') && (
             <div className="space-y-2">
               <Label htmlFor="gate-k">K值 (至少K个输入为真)</Label>
               <Input
@@ -105,7 +105,7 @@ export function NodeEditor({ node, onClose, onUpdate, viewportDimensions }: Node
               />
             </div>
           )}
-          {nodeData.data.type === "cardinality" && (
+          {nodeData.data.type === 'cardinality' && (
             <div className="space-y-2">
               <Label htmlFor="gate-l">L值 (最多L个输入为真)</Label>
               <Input
@@ -120,8 +120,8 @@ export function NodeEditor({ node, onClose, onUpdate, viewportDimensions }: Node
             </div>
           )}
         </div>
-      )
-    } else if (node.type === "basicEvent") {
+      );
+    } else if (node.type === 'basicEvent') {
       return (
         <div className="space-y-4">
           <div className="space-y-2">
@@ -159,8 +159,8 @@ export function NodeEditor({ node, onClose, onUpdate, viewportDimensions }: Node
             />
           </div>
         </div>
-      )
-    } else if (node.type === "houseEvent") {
+      );
+    } else if (node.type === 'houseEvent') {
       return (
         <div className="space-y-4">
           <div className="space-y-2">
@@ -186,38 +186,38 @@ export function NodeEditor({ node, onClose, onUpdate, viewportDimensions }: Node
               checked={nodeData.data.state}
               onCheckedChange={(checked) => setNodeData({ ...nodeData, data: { ...nodeData.data, state: checked } })}
             />
-            <Label htmlFor="house-state">状态: {nodeData.data.state ? "TRUE" : "FALSE"}</Label>
+            <Label htmlFor="house-state">状态: {nodeData.data.state ? 'TRUE' : 'FALSE'}</Label>
           </div>
         </div>
-      )
+      );
     }
 
-    return <div>未知节点类型</div>
-  }
+    return <div>未知节点类型</div>;
+  };
 
   // 计算编辑器位置和尺寸
   const editorStyle = isMaximized
-    ? { position: "absolute", inset: "10px", width: "auto", height: "auto", zIndex: 50 }
+    ? { position: 'absolute', inset: '10px', width: 'auto', height: 'auto', zIndex: 50 }
     : {
-        position: "absolute",
-        top: "10px",
-        right: "10px",
-        width: isMinimized ? "200px" : "350px",
+        position: 'absolute',
+        top: '10px',
+        right: '10px',
+        width: isMinimized ? '200px' : '350px',
         zIndex: 50,
-      }
+      };
 
   return (
     <div style={editorStyle as React.CSSProperties}>
       <Card className="border shadow-lg">
         <CardHeader className="flex flex-row items-center justify-between p-2">
           <CardTitle className="flex items-center text-sm">
-            {node.type === "gate"
-              ? "编辑门"
-              : node.type === "basicEvent"
-                ? "编辑基本事件"
-                : node.type === "houseEvent"
-                  ? "编辑房屋事件"
-                  : "编辑节点"}
+            {node.type === 'gate'
+              ? '编辑门'
+              : node.type === 'basicEvent'
+                ? '编辑基本事件'
+                : node.type === 'houseEvent'
+                  ? '编辑房屋事件'
+                  : '编辑节点'}
           </CardTitle>
           <div className="flex items-center space-x-1">
             <Button variant="ghost" size="icon" className="size-6" onClick={handleMinimize}>
@@ -245,5 +245,5 @@ export function NodeEditor({ node, onClose, onUpdate, viewportDimensions }: Node
         )}
       </Card>
     </div>
-  )
+  );
 }

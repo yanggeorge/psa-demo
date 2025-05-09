@@ -1,24 +1,29 @@
-"use client"
+'use client';
 
-import { ChevronDown, X } from "lucide-react"
-import type React from "react"
-import { useEffect, useMemo,useRef, useState } from "react"
+import { ChevronDown, X } from 'lucide-react';
+import type React from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogFooter,DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { parseXML } from "@/lib/xml-parser"
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { parseXML } from '@/lib/xml-parser';
 
-import { FaultTreeViewer } from "./fault-tree-viewer"
-import { ReportViewer } from "./report-viewer"
-import { BasicEventsTable } from "./tables/basic-events-table"
-import { GatesTable } from "./tables/gates-table"
-import { HouseEventsTable } from "./tables/house-events-table"
+import { FaultTreeViewer } from './fault-tree-viewer';
+import { ReportViewer } from './report-viewer';
+import { BasicEventsTable } from './tables/basic-events-table';
+import { GatesTable } from './tables/gates-table';
+import { HouseEventsTable } from './tables/house-events-table';
 
 // 示例XML数据
 const sampleXmlData = `<?xml version="1.0" encoding="UTF-8"?>
@@ -59,67 +64,67 @@ const sampleXmlData = `<?xml version="1.0" encoding="UTF-8"?>
       <constant value="false"/>
     </define-house-event>
   </model-data>
-</opsa-mef>`
+</opsa-mef>`;
 
 // 标签页类型定义
 interface TabInfo {
-  id: string
-  type: string
-  label: string
-  treeName?: string
+  id: string;
+  type: string;
+  label: string;
+  treeName?: string;
 }
 
 // 每个标签的固定宽度
-const FIXED_TAB_WIDTH = 120 // 单位：像素
+const FIXED_TAB_WIDTH = 120; // 单位：像素
 // 更多标签按钮的宽度
-const MORE_TABS_BUTTON_WIDTH = 100 // 单位：像素
+const MORE_TABS_BUTTON_WIDTH = 100; // 单位：像素
 // 关闭所有标签按钮的宽度
-const CLOSE_ALL_BUTTON_WIDTH = 40 // 单位：像素
+const CLOSE_ALL_BUTTON_WIDTH = 40; // 单位：像素
 // 其他UI元素（边框、内边距等）占用的空间
-const UI_ELEMENTS_WIDTH = 20 // 单位：像素
+const UI_ELEMENTS_WIDTH = 20; // 单位：像素
 // 左侧边栏展开和收起的宽度
-const LEFT_SIDEBAR_EXPANDED_WIDTH = 256 // 64rem = 256px
-const LEFT_SIDEBAR_COLLAPSED_WIDTH = 48 // 12rem = 48px
+const LEFT_SIDEBAR_EXPANDED_WIDTH = 256; // 64rem = 256px
+const LEFT_SIDEBAR_COLLAPSED_WIDTH = 48; // 12rem = 48px
 // 右侧边栏展开和收起的宽度
-const RIGHT_SIDEBAR_EXPANDED_WIDTH = 256 // 64rem = 256px
-const RIGHT_SIDEBAR_COLLAPSED_WIDTH = 48 // 12rem = 48px
+const RIGHT_SIDEBAR_EXPANDED_WIDTH = 256; // 64rem = 256px
+const RIGHT_SIDEBAR_COLLAPSED_WIDTH = 48; // 12rem = 48px
 
 export function WorkArea() {
   // 标签页管理
-  const [tabs, setTabs] = useState<TabInfo[]>([])
-  const [activeTab, setActiveTab] = useState<string>("")
-  const [containerWidth, setContainerWidth] = useState(0)
-  const [windowWidth, setWindowWidth] = useState(0)
-  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false)
-  const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(true) // 默认右侧边栏是收起的
-  const tabContainerRef = useRef<HTMLDivElement>(null)
+  const [tabs, setTabs] = useState<TabInfo[]>([]);
+  const [activeTab, setActiveTab] = useState<string>('');
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(0);
+  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
+  const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(true); // 默认右侧边栏是收起的
+  const tabContainerRef = useRef<HTMLDivElement>(null);
 
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [editingElement, setEditingElement] = useState<{ type: string; id: string; data: any } | null>(null)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingElement, setEditingElement] = useState<{ type: string; id: string; data: any } | null>(null);
 
   // Parse the sample XML data to get element data
   const xmlData = useMemo(() => {
     try {
-      return parseXML(sampleXmlData)
+      return parseXML(sampleXmlData);
     } catch (err) {
-      console.error("解析XML数据时出错:", err)
-      return { gates: [], basicEvents: [], houseEvents: [] }
+      console.error('解析XML数据时出错:', err);
+      return { gates: [], basicEvents: [], houseEvents: [] };
     }
-  }, [])
+  }, []);
 
   // Handle element edit requests
   useEffect(() => {
     const handleEditElement = (event: CustomEvent<{ elementType: string; elementId: string }>) => {
-      const { elementType, elementId } = event.detail
+      const { elementType, elementId } = event.detail;
 
       // Find element data based on type and ID
-      let elementData = null
-      if (elementType === "gates") {
-        elementData = xmlData.gates.find((gate) => gate.name === elementId)
-      } else if (elementType === "basicEvents") {
-        elementData = xmlData.basicEvents.find((event) => event.name === elementId)
-      } else if (elementType === "houseEvents") {
-        elementData = xmlData.houseEvents.find((event) => event.name === elementId)
+      let elementData = null;
+      if (elementType === 'gates') {
+        elementData = xmlData.gates.find((gate) => gate.name === elementId);
+      } else if (elementType === 'basicEvents') {
+        elementData = xmlData.basicEvents.find((event) => event.name === elementId);
+      } else if (elementType === 'houseEvents') {
+        elementData = xmlData.houseEvents.find((event) => event.name === elementId);
       }
 
       if (elementData) {
@@ -127,77 +132,77 @@ export function WorkArea() {
           type: elementType,
           id: elementId,
           data: elementData,
-        })
-        setIsEditDialogOpen(true)
+        });
+        setIsEditDialogOpen(true);
       }
-    }
+    };
 
-    window.addEventListener("editElement", handleEditElement as EventListener)
+    window.addEventListener('editElement', handleEditElement as EventListener);
 
     return () => {
-      window.removeEventListener("editElement", handleEditElement as EventListener)
-    }
-  }, [xmlData])
+      window.removeEventListener('editElement', handleEditElement as EventListener);
+    };
+  }, [xmlData]);
 
   // Save edited element
   const handleSaveEdit = () => {
     // In a real application, you'd update the actual data or send changes to a server
-    console.log("Saving edited element:", editingElement)
+    console.log('Saving edited element:', editingElement);
 
     // Close dialog and reset state
-    setIsEditDialogOpen(false)
-    setEditingElement(null)
-  }
+    setIsEditDialogOpen(false);
+    setEditingElement(null);
+  };
 
   // 监听窗口大小变化
   useEffect(() => {
     const handleResize = () => {
-      setWindowWidth(window.innerWidth)
-    }
+      setWindowWidth(window.innerWidth);
+    };
 
     // 初始化窗口宽度
-    setWindowWidth(window.innerWidth)
-    window.addEventListener("resize", handleResize)
+    setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize)
-    }
-  }, [])
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   // 监听左侧边栏状态变化
   useEffect(() => {
     const handleLeftSidebarToggle = (event: CustomEvent<{ collapsed: boolean }>) => {
-      setLeftSidebarCollapsed(event.detail.collapsed)
-    }
+      setLeftSidebarCollapsed(event.detail.collapsed);
+    };
 
-    window.addEventListener("leftSidebarToggle", handleLeftSidebarToggle as EventListener)
+    window.addEventListener('leftSidebarToggle', handleLeftSidebarToggle as EventListener);
 
     return () => {
-      window.removeEventListener("leftSidebarToggle", handleLeftSidebarToggle as EventListener)
-    }
-  }, [])
+      window.removeEventListener('leftSidebarToggle', handleLeftSidebarToggle as EventListener);
+    };
+  }, []);
 
   // 监听右侧边栏状态变化
   useEffect(() => {
     const handleRightSidebarToggle = (event: CustomEvent<{ collapsed: boolean }>) => {
-      setRightSidebarCollapsed(event.detail.collapsed)
-    }
+      setRightSidebarCollapsed(event.detail.collapsed);
+    };
 
-    window.addEventListener("rightSidebarToggle", handleRightSidebarToggle as EventListener)
+    window.addEventListener('rightSidebarToggle', handleRightSidebarToggle as EventListener);
 
     return () => {
-      window.removeEventListener("rightSidebarToggle", handleRightSidebarToggle as EventListener)
-    }
-  }, [])
+      window.removeEventListener('rightSidebarToggle', handleRightSidebarToggle as EventListener);
+    };
+  }, []);
 
   // 计算工作区实际宽度
   const workAreaWidth = useMemo(() => {
-    const leftSidebarWidth = leftSidebarCollapsed ? LEFT_SIDEBAR_COLLAPSED_WIDTH : LEFT_SIDEBAR_EXPANDED_WIDTH
-    const rightSidebarWidth = rightSidebarCollapsed ? RIGHT_SIDEBAR_COLLAPSED_WIDTH : RIGHT_SIDEBAR_EXPANDED_WIDTH
+    const leftSidebarWidth = leftSidebarCollapsed ? LEFT_SIDEBAR_COLLAPSED_WIDTH : LEFT_SIDEBAR_EXPANDED_WIDTH;
+    const rightSidebarWidth = rightSidebarCollapsed ? RIGHT_SIDEBAR_COLLAPSED_WIDTH : RIGHT_SIDEBAR_EXPANDED_WIDTH;
 
     // 总宽度减去两侧边栏宽度
-    return windowWidth - leftSidebarWidth - rightSidebarWidth
-  }, [windowWidth, leftSidebarCollapsed, rightSidebarCollapsed])
+    return windowWidth - leftSidebarWidth - rightSidebarWidth;
+  }, [windowWidth, leftSidebarCollapsed, rightSidebarCollapsed]);
 
   // 计算可见和隐藏的标签页
   const { visibleTabs, hiddenTabs } = useMemo(() => {
@@ -206,63 +211,63 @@ export function WorkArea() {
       return {
         visibleTabs: tabs,
         hiddenTabs: [],
-      }
+      };
     }
 
     // 计算可用于显示标签的宽度
     // 总是为关闭所有按钮预留空间
-    const availableWidth = workAreaWidth - CLOSE_ALL_BUTTON_WIDTH - UI_ELEMENTS_WIDTH
+    const availableWidth = workAreaWidth - CLOSE_ALL_BUTTON_WIDTH - UI_ELEMENTS_WIDTH;
 
     // 计算可以显示的标签数量
-    let maxVisibleTabs = Math.floor(availableWidth / FIXED_TAB_WIDTH)
+    let maxVisibleTabs = Math.floor(availableWidth / FIXED_TAB_WIDTH);
 
     // 如果有隐藏的标签，需要为"更多标签"按钮预留空间
     if (maxVisibleTabs < tabs.length) {
-      maxVisibleTabs = Math.floor((availableWidth - MORE_TABS_BUTTON_WIDTH) / FIXED_TAB_WIDTH)
+      maxVisibleTabs = Math.floor((availableWidth - MORE_TABS_BUTTON_WIDTH) / FIXED_TAB_WIDTH);
     }
 
     // 确保至少显示一个标签
-    maxVisibleTabs = Math.max(1, maxVisibleTabs)
+    maxVisibleTabs = Math.max(1, maxVisibleTabs);
     // 确保不超过标签总数
-    maxVisibleTabs = Math.min(maxVisibleTabs, tabs.length)
+    maxVisibleTabs = Math.min(maxVisibleTabs, tabs.length);
 
     // 如果所有标签都可以显示
     if (maxVisibleTabs >= tabs.length) {
       return {
         visibleTabs: tabs,
         hiddenTabs: [],
-      }
+      };
     }
 
     // 确保活动标签总是可见的
-    const activeTabIndex = tabs.findIndex((tab) => tab.id === activeTab)
-    let visibleIndexes: number[] = []
+    const activeTabIndex = tabs.findIndex((tab) => tab.id === activeTab);
+    let visibleIndexes: number[] = [];
 
     // 如果活动标签在可见范围内，就显示前maxVisibleTabs个标签
     if (activeTabIndex < maxVisibleTabs) {
-      visibleIndexes = Array.from({ length: maxVisibleTabs }, (_, i) => i)
+      visibleIndexes = Array.from({ length: maxVisibleTabs }, (_, i) => i);
     } else {
       // 活动标签不在可见范围内，需要确保它可见
       // 显示活动标签及其前后的标签
-      const startIdx = Math.max(0, activeTabIndex - Math.floor(maxVisibleTabs / 2))
-      const endIdx = Math.min(tabs.length - 1, startIdx + maxVisibleTabs - 1)
+      const startIdx = Math.max(0, activeTabIndex - Math.floor(maxVisibleTabs / 2));
+      const endIdx = Math.min(tabs.length - 1, startIdx + maxVisibleTabs - 1);
 
-      visibleIndexes = Array.from({ length: endIdx - startIdx + 1 }, (_, i) => startIdx + i)
+      visibleIndexes = Array.from({ length: endIdx - startIdx + 1 }, (_, i) => startIdx + i);
     }
 
-    const visible = tabs.filter((_, index) => visibleIndexes.includes(index))
-    const hidden = tabs.filter((_, index) => !visibleIndexes.includes(index))
+    const visible = tabs.filter((_, index) => visibleIndexes.includes(index));
+    const hidden = tabs.filter((_, index) => !visibleIndexes.includes(index));
 
-    return { visibleTabs: visible, hiddenTabs: hidden }
-  }, [tabs, activeTab, workAreaWidth])
+    return { visibleTabs: visible, hiddenTabs: hidden };
+  }, [tabs, activeTab, workAreaWidth]);
 
   // 监听来自侧边栏的事件
   useEffect(() => {
     const handleOpenElementTab = (event: CustomEvent<{ elementType: string }>) => {
-      const { elementType } = event.detail
+      const { elementType } = event.detail;
 
       // 检查标签页是否已存在
-      const existingTabIndex = tabs.findIndex((tab) => tab.type === elementType)
+      const existingTabIndex = tabs.findIndex((tab) => tab.type === elementType);
 
       if (existingTabIndex === -1) {
         // 如果标签页不存在，添加它
@@ -270,143 +275,143 @@ export function WorkArea() {
           id: `tab-${Date.now()}`,
           type: elementType,
           label:
-            elementType === "gates"
-              ? "门"
-              : elementType === "basicEvents"
-                ? "基本事件"
-                : elementType === "houseEvents"
-                  ? "房屋事件"
-                  : "故障树可视化",
-        }
+            elementType === 'gates'
+              ? '门'
+              : elementType === 'basicEvents'
+                ? '基本事件'
+                : elementType === 'houseEvents'
+                  ? '房屋事件'
+                  : '故障树可视化',
+        };
 
-        setTabs((prev) => [...prev, newTab])
-        setActiveTab(newTab.id)
+        setTabs((prev) => [...prev, newTab]);
+        setActiveTab(newTab.id);
       } else {
         // 如果标签页已存在，激活它
-        setActiveTab(tabs[existingTabIndex].id)
+        setActiveTab(tabs[existingTabIndex].id);
       }
-    }
+    };
 
     // 添加事件监听器
-    window.addEventListener("openElementTab", handleOpenElementTab as EventListener)
+    window.addEventListener('openElementTab', handleOpenElementTab as EventListener);
 
     // 清理函数
     return () => {
-      window.removeEventListener("openElementTab", handleOpenElementTab as EventListener)
-    }
-  }, [tabs])
+      window.removeEventListener('openElementTab', handleOpenElementTab as EventListener);
+    };
+  }, [tabs]);
 
   // 监听打开故障树标签页事件
   useEffect(() => {
     const handleOpenFaultTreeTab = (event: CustomEvent<{ treeName: string }>) => {
-      const { treeName } = event.detail
+      const { treeName } = event.detail;
 
       // 检查该故障树的标签页是否已存在
-      const existingTabIndex = tabs.findIndex((tab) => tab.type === "faultTree" && tab.treeName === treeName)
+      const existingTabIndex = tabs.findIndex((tab) => tab.type === 'faultTree' && tab.treeName === treeName);
 
       if (existingTabIndex === -1) {
         // 如果标签页不存在，添加它
         const newTab: TabInfo = {
           id: `tree-${Date.now()}`,
-          type: "faultTree",
+          type: 'faultTree',
           label: treeName,
           treeName: treeName,
-        }
+        };
 
-        setTabs((prev) => [...prev, newTab])
-        setActiveTab(newTab.id)
+        setTabs((prev) => [...prev, newTab]);
+        setActiveTab(newTab.id);
       } else {
         // 如果标签页已存在，激活它
-        setActiveTab(tabs[existingTabIndex].id)
+        setActiveTab(tabs[existingTabIndex].id);
       }
-    }
+    };
 
-    window.addEventListener("openFaultTreeTab", handleOpenFaultTreeTab as EventListener)
+    window.addEventListener('openFaultTreeTab', handleOpenFaultTreeTab as EventListener);
 
     return () => {
-      window.removeEventListener("openFaultTreeTab", handleOpenFaultTreeTab as EventListener)
-    }
-  }, [tabs])
+      window.removeEventListener('openFaultTreeTab', handleOpenFaultTreeTab as EventListener);
+    };
+  }, [tabs]);
 
   // 监听创建新故障树事件
   useEffect(() => {
     const handleCreateFaultTree = (event: CustomEvent<{ treeName: string }>) => {
-      const { treeName } = event.detail
+      const { treeName } = event.detail;
 
       // 创建新标签页
       const newTab: TabInfo = {
         id: `tree-${Date.now()}`,
-        type: "faultTree",
+        type: 'faultTree',
         label: treeName,
         treeName: treeName,
-      }
+      };
 
-      setTabs((prev) => [...prev, newTab])
-      setActiveTab(newTab.id)
-    }
+      setTabs((prev) => [...prev, newTab]);
+      setActiveTab(newTab.id);
+    };
 
-    window.addEventListener("createFaultTree", handleCreateFaultTree as EventListener)
+    window.addEventListener('createFaultTree', handleCreateFaultTree as EventListener);
 
     return () => {
-      window.removeEventListener("createFaultTree", handleCreateFaultTree as EventListener)
-    }
-  }, [])
+      window.removeEventListener('createFaultTree', handleCreateFaultTree as EventListener);
+    };
+  }, []);
 
   // 监听打开报告标签页事件
   useEffect(() => {
     const handleOpenReportTab = (event: CustomEvent<{ reportName: string }>) => {
-      const { reportName } = event.detail
+      const { reportName } = event.detail;
 
       // 检查该报告的标签页是否已存在
-      const existingTabIndex = tabs.findIndex((tab) => tab.type === "report" && tab.label === reportName)
+      const existingTabIndex = tabs.findIndex((tab) => tab.type === 'report' && tab.label === reportName);
 
       if (existingTabIndex === -1) {
         // 如果标签页不存在，添加它
         const newTab: TabInfo = {
           id: `report-${Date.now()}`,
-          type: "report",
+          type: 'report',
           label: reportName,
-        }
+        };
 
-        setTabs((prev) => [...prev, newTab])
-        setActiveTab(newTab.id)
+        setTabs((prev) => [...prev, newTab]);
+        setActiveTab(newTab.id);
       } else {
         // 如果标签页已存在，激活它
-        setActiveTab(tabs[existingTabIndex].id)
+        setActiveTab(tabs[existingTabIndex].id);
       }
-    }
+    };
 
-    window.addEventListener("openReportTab", handleOpenReportTab as EventListener)
+    window.addEventListener('openReportTab', handleOpenReportTab as EventListener);
 
     return () => {
-      window.removeEventListener("openReportTab", handleOpenReportTab as EventListener)
-    }
-  }, [tabs])
+      window.removeEventListener('openReportTab', handleOpenReportTab as EventListener);
+    };
+  }, [tabs]);
 
   // 关闭标签页
   const closeTab = (tabId: string, event: React.MouseEvent) => {
-    event.stopPropagation()
-    const newTabs = tabs.filter((tab) => tab.id !== tabId)
-    setTabs(newTabs)
+    event.stopPropagation();
+    const newTabs = tabs.filter((tab) => tab.id !== tabId);
+    setTabs(newTabs);
 
     // 如果关闭的是当前活动的标签页，切换到第一个标签页
     if (activeTab === tabId && newTabs.length > 0) {
-      setActiveTab(newTabs[0].id)
+      setActiveTab(newTabs[0].id);
     }
-  }
+  };
 
   // 获取当前标签页的类型和树名称
   const getCurrentTabInfo = () => {
-    const currentTab = tabs.find((tab) => tab.id === activeTab)
-    if (!currentTab) return { type: "", treeName: "" }
+    const currentTab = tabs.find((tab) => tab.id === activeTab);
+    if (!currentTab) return { type: '', treeName: '' };
 
     return {
       type: currentTab.type,
-      treeName: currentTab.treeName || "",
-    }
-  }
+      treeName: currentTab.treeName || '',
+    };
+  };
 
-  const { type: currentTabType, treeName: currentTreeName } = getCurrentTabInfo()
+  const { type: currentTabType, treeName: currentTreeName } = getCurrentTabInfo();
 
   return (
     <div className="flex h-full flex-1 flex-col overflow-hidden">
@@ -471,8 +476,8 @@ export function WorkArea() {
                         <button
                           className="ml-2 rounded-full p-0.5 hover:bg-muted"
                           onClick={(e) => {
-                            e.stopPropagation()
-                            closeTab(tab.id, e)
+                            e.stopPropagation();
+                            closeTab(tab.id, e);
                           }}
                         >
                           <svg
@@ -505,8 +510,8 @@ export function WorkArea() {
                     className="size-8"
                     onClick={() => {
                       // Close all tabs
-                      setTabs([])
-                      setActiveTab("")
+                      setTabs([]);
+                      setActiveTab('');
                     }}
                     title="关闭所有标签页"
                   >
@@ -527,11 +532,11 @@ export function WorkArea() {
               className="absolute inset-0 h-full overflow-hidden data-[state=inactive]:hidden"
             >
               <div className="thin-scrollbar h-full overflow-auto">
-                {tab.type === "gates" && <GatesTable />}
-                {tab.type === "basicEvents" && <BasicEventsTable />}
-                {tab.type === "houseEvents" && <HouseEventsTable />}
-                {tab.type === "faultTree" && <FaultTreeViewer xmlData={sampleXmlData} initialTreeName={tab.treeName} />}
-                {tab.type === "report" && <ReportViewer reportName={tab.label} />}
+                {tab.type === 'gates' && <GatesTable />}
+                {tab.type === 'basicEvents' && <BasicEventsTable />}
+                {tab.type === 'houseEvents' && <HouseEventsTable />}
+                {tab.type === 'faultTree' && <FaultTreeViewer xmlData={sampleXmlData} initialTreeName={tab.treeName} />}
+                {tab.type === 'report' && <ReportViewer reportName={tab.label} />}
               </div>
             </TabsContent>
           ))}
@@ -541,18 +546,18 @@ export function WorkArea() {
       {/* 底部状态栏 - 固定不滚动 */}
       <div className="flex h-6 items-center border-t bg-muted/30 px-2 text-xs text-muted-foreground">
         <span>
-          当前视图:{" "}
-          {currentTabType === "gates"
-            ? "门"
-            : currentTabType === "basicEvents"
-              ? "基本事件"
-              : currentTabType === "houseEvents"
-                ? "房屋事件"
-                : currentTabType === "faultTree"
+          当前视图:{' '}
+          {currentTabType === 'gates'
+            ? '门'
+            : currentTabType === 'basicEvents'
+              ? '基本事件'
+              : currentTabType === 'houseEvents'
+                ? '房屋事件'
+                : currentTabType === 'faultTree'
                   ? `故障树 - ${currentTreeName}`
-                  : currentTabType === "report"
-                    ? `报告 - ${tabs.find((tab) => tab.id === activeTab)?.label || ""}`
-                    : ""}
+                  : currentTabType === 'report'
+                    ? `报告 - ${tabs.find((tab) => tab.id === activeTab)?.label || ''}`
+                    : ''}
         </span>
         <span className="ml-auto">就绪</span>
       </div>
@@ -563,11 +568,11 @@ export function WorkArea() {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>
-                {editingElement.type === "gates"
-                  ? "编辑门"
-                  : editingElement.type === "basicEvents"
-                    ? "编辑基本事件"
-                    : "编辑房屋事件"}
+                {editingElement.type === 'gates'
+                  ? '编辑门'
+                  : editingElement.type === 'basicEvents'
+                    ? '编辑基本事件'
+                    : '编辑房屋事件'}
               </DialogTitle>
             </DialogHeader>
 
@@ -586,7 +591,7 @@ export function WorkArea() {
                 </Label>
                 <Input
                   id="element-label"
-                  value={editingElement.data.label || ""}
+                  value={editingElement.data.label || ''}
                   className="col-span-3"
                   onChange={(e) =>
                     setEditingElement({
@@ -598,13 +603,13 @@ export function WorkArea() {
               </div>
 
               {/* Gate specific fields */}
-              {editingElement.type === "gates" && (
+              {editingElement.type === 'gates' && (
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="element-type" className="text-right">
                     类型
                   </Label>
                   <Select
-                    value={editingElement.data.type || ""}
+                    value={editingElement.data.type || ''}
                     onValueChange={(value) =>
                       setEditingElement({
                         ...editingElement,
@@ -628,7 +633,7 @@ export function WorkArea() {
               )}
 
               {/* Basic event specific fields */}
-              {editingElement.type === "basicEvents" && (
+              {editingElement.type === 'basicEvents' && (
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="element-probability" className="text-right">
                     概率
@@ -652,7 +657,7 @@ export function WorkArea() {
               )}
 
               {/* House event specific fields */}
-              {editingElement.type === "houseEvents" && (
+              {editingElement.type === 'houseEvents' && (
                 <div className="flex items-center justify-end space-x-2 pr-2 pt-2">
                   <Switch
                     id="element-state"
@@ -664,7 +669,7 @@ export function WorkArea() {
                       })
                     }
                   />
-                  <Label htmlFor="element-state">状态: {editingElement.data.state ? "TRUE" : "FALSE"}</Label>
+                  <Label htmlFor="element-state">状态: {editingElement.data.state ? 'TRUE' : 'FALSE'}</Label>
                 </div>
               )}
             </div>
@@ -679,5 +684,5 @@ export function WorkArea() {
         </Dialog>
       )}
     </div>
-  )
+  );
 }
