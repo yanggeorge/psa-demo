@@ -12,9 +12,10 @@ export default auth((req, ctx) => {
 
   console.log('🚀 ~ middleware.ts ~ path:', path, 'session:', !!session);
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   // 如果用户已登录且访问的是 /login，重定向到 /
   if (session && path === '/login') {
-    return NextResponse.redirect(new URL('/', req.url));
+    return NextResponse.redirect(new URL('/', baseUrl));
   }
 
   // 如果路径是公共路径，允许访问
@@ -24,7 +25,7 @@ export default auth((req, ctx) => {
 
   // 如果用户未登录且访问非公共路径，重定向到 /login
   if (!session) {
-    return NextResponse.redirect(new URL('/login', req.url));
+    return NextResponse.redirect(new URL('/login', baseUrl));
   }
 
   // 已登录且访问非 /login 的路径，允许继续
