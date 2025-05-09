@@ -56,10 +56,11 @@ export function Menu() {
   };
 
   // 处理菜单项点击
-  const handleMenuItemClick = async (action: () => void | Promise<void> = () => {}) => {
+  const handleMenuItemClick = (action: () => void | Promise<void> = () => {}) => {
+    console.log('Handling menu item click:', action);
     try {
       // 统一处理同步和异步函数
-      await Promise.resolve(action());
+      Promise.resolve(action());
     } catch (error) {
       console.error('Action execution failed:', error);
     }
@@ -70,6 +71,7 @@ export function Menu() {
 
   // 处理登出
   const handleSignOut = async () => {
+    console.log('Logging out...');
     await logOut();
   };
 
@@ -249,7 +251,7 @@ export function Menu() {
               variant="ghost"
               size="sm"
               className="w-full justify-start text-left"
-              onClick={() => handleMenuItemClick()}
+              onClick={() => console.log('个人资料')}
             >
               <User className="mr-2 size-4" />
               <span>个人资料</span>
@@ -383,6 +385,7 @@ export function Menu() {
                 size="sm"
                 className={`h-8 gap-2 ${activeMenu === 'user' ? 'bg-accent' : ''}`}
                 onClick={() => handleMenuClick('user')}
+                onMouseEnter={() => handleMenuHover('user')}
               >
                 <Avatar className="size-6">
                   <AvatarFallback>{session.user?.name?.[0] || 'U'}</AvatarFallback>
@@ -399,6 +402,7 @@ export function Menu() {
               size="icon"
               className={`ml-2 size-8 ${activeMenu === 'settings' ? 'bg-accent' : ''}`}
               onClick={() => handleMenuClick('settings')}
+              onMouseEnter={() => handleMenuHover('settings')}
             >
               <Settings className="size-4" />
             </Button>

@@ -2,7 +2,8 @@
 
 import { AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useActionState, useState, startTransition } from 'react';
+import type { FormEvent } from 'react';
+import { startTransition, useActionState, useState } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
