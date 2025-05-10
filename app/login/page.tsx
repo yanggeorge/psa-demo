@@ -1,7 +1,7 @@
 'use client';
 
 import { AlertCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import type { FormEvent } from 'react';
 import { startTransition, useActionState, useState } from 'react';
 
@@ -19,12 +19,16 @@ export default function LoginPage() {
 
   const [errorMessage, formAction, isPending] = useActionState(authenticate, undefined);
 
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData();
     formData.append('username', username);
     formData.append('password', password);
+    formData.append('redirectTo', callbackUrl);
 
     startTransition(() => {
       formAction(formData);

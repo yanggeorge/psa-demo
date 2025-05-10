@@ -58,7 +58,7 @@ export function Menu() {
 
   // 处理菜单项点击
   const handleMenuItemClick = (action: () => void | Promise<void> = () => {}) => {
-    console.log('Handling menu item click:', action);
+    console.log('handleMenuItemClick');
     try {
       // 统一处理同步和异步函数
       Promise.resolve(action());
@@ -81,8 +81,10 @@ export function Menu() {
     const handleClickOutside = (event: MouseEvent) => {
       console.log('handleClickOutside triggered');
       if (
-        (leftMenuRef.current && !leftMenuRef.current.contains(event.target as Node)) ||
-        (rightMenuRef.current && !rightMenuRef.current.contains(event.target as Node))
+        leftMenuRef.current &&
+        !leftMenuRef.current.contains(event.target as Node) &&
+        rightMenuRef.current &&
+        !rightMenuRef.current.contains(event.target as Node)
       ) {
         console.log('Outside click detected, closing menu');
         setActiveMenu(null);
@@ -257,7 +259,7 @@ export function Menu() {
               variant="ghost"
               size="sm"
               className="w-full justify-start text-left"
-              onClick={() => console.log('个人资料')}
+              onClick={() => handleMenuItemClick()}
             >
               <User className="mr-2 size-4" />
               <span>个人资料</span>

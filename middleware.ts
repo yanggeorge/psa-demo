@@ -6,13 +6,13 @@ export default auth((req, ctx) => {
   const publicPaths = ['/login', '/api/auth'];
 
   const path = req.nextUrl.pathname;
+  const baseUrl = req.nextUrl.origin;
 
   // 检查会话状态
   const session = req.auth; // v5 中通过 req.auth 获取会话
 
   console.log('🚀 ~ middleware.ts ~ path:', path, 'session:', !!session);
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   // 如果用户已登录且访问的是 /login，重定向到 /
   if (session && path === '/login') {
     return NextResponse.redirect(new URL('/', baseUrl));
