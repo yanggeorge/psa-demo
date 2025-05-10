@@ -1,7 +1,7 @@
 'use client';
 
 import { AlertCircle } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import type { FormEvent } from 'react';
 import { startTransition, useActionState, useState } from 'react';
 
@@ -13,7 +13,6 @@ import { Label } from '@/components/ui/label';
 import { authenticate } from '@/lib/actions';
 
 export default function LoginPage() {
-  const router = useRouter();
   const [username, setUsername] = useState('psaadmin');
   const [password, setPassword] = useState('123456');
 
