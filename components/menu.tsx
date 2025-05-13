@@ -22,14 +22,15 @@ import {
   ZoomIn,
   ZoomOut,
 } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { logOut } from '@/lib/actions';
 export function Menu() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  console.log('🚀 ~ menu.tsx:33 ~ Menu ~ session:', session, ' status:', status);
 
   // 移动端菜单状态
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

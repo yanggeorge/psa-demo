@@ -7,6 +7,7 @@ import type React from 'react';
 import { ThemeProvider } from '@/components/theme-provider';
 
 import { Providers } from './providers';
+import { auth } from '@/auth';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,16 +17,17 @@ export const metadata: Metadata = {
   generator: 'v0.dev',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <Providers>{children}</Providers>
+          <Providers session={session}>{children}</Providers>
         </ThemeProvider>
       </body>
     </html>

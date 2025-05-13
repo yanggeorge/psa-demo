@@ -1,7 +1,7 @@
 'use client';
 
 import { AlertCircle } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import type { FormEvent } from 'react';
 import { startTransition, useActionState, useState } from 'react';
 
@@ -13,7 +13,8 @@ import { Label } from '@/components/ui/label';
 import { authenticate } from '@/lib/actions';
 
 export default function LoginPage() {
-  const router = useRouter();
+  console.log('🚀 ~ LoginPage begin');
+
   const [username, setUsername] = useState('psaadmin');
   const [password, setPassword] = useState('123456');
 
@@ -34,7 +35,7 @@ export default function LoginPage() {
       formAction(formData);
     });
   };
-
+  console.log('🚀 ~ LoginPage end');
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <Card className="w-[350px]">

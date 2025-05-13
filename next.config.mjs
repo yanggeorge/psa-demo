@@ -9,6 +9,14 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+    incomingRequests: {
+      ignore: [/\api\/v1\/health/],
+    },
+  },
 };
 
 export default nextConfig;
