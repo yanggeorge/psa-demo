@@ -22,7 +22,7 @@ import {
   ZoomIn,
   ZoomOut,
 } from 'lucide-react';
-import { signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
