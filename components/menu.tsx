@@ -106,7 +106,7 @@ export function Menu() {
     switch (activeMenu) {
       case 'file':
         return (
-          <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md min-w-[896px]">
+          <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
             <Button
               variant="ghost"
               size="sm"
@@ -265,6 +265,15 @@ export function Menu() {
               <User className="mr-2 size-4" />
               <span>个人资料</span>
             </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-left"
+              onClick={() => handleMenuItemClick()}
+            >
+              <Settings className="mr-2 size-4" />
+              <span>系统设置</span>
+            </Button>
             <div className="my-1 h-px bg-border" />
             <Button
               variant="ghost"
@@ -277,213 +286,107 @@ export function Menu() {
             </Button>
           </div>
         );
-      case 'settings':
-        return (
-          <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start text-left"
-              onClick={() => handleMenuItemClick()}
-            >
-              应用设置
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start text-left"
-              onClick={() => handleMenuItemClick()}
-            >
-              用户偏好
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start text-left"
-              onClick={() => handleMenuItemClick()}
-            >
-              主题设置
-            </Button>
-            <div className="my-1 h-px bg-border" />
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start text-left"
-              onClick={() => handleMenuItemClick()}
-            >
-              关于
-            </Button>
-          </div>
-        );
       default:
         return null;
     }
   };
 
   return (
-    <>
-      {/* 桌面端水平菜单 */}
-      <div className="flex justify-between border-b bg-background min-w-[896px]">
-        <div className="flex items-center">
-          <div className="px-4 py-2 font-semibold text-primary">PSA分析</div>
-          <div className="flex items-center space-x-1 p-1" ref={leftMenuRef}>
-            {/* 文件菜单 */}
-            <div className="relative">
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`h-8 ${activeMenu === 'file' ? 'bg-accent' : ''}`}
-                onClick={() => handleMenuClick('file')}
-                onMouseEnter={() => handleMenuHover('file')}
-              >
-                文件
-              </Button>
-              {activeMenu === 'file' && renderMenuContent()}
-            </div>
-
-            {/* 编辑菜单 */}
-            <div className="relative">
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`h-8 ${activeMenu === 'edit' ? 'bg-accent' : ''}`}
-                onClick={() => handleMenuClick('edit')}
-                onMouseEnter={() => handleMenuHover('edit')}
-              >
-                编辑
-              </Button>
-              {activeMenu === 'edit' && renderMenuContent()}
-            </div>
-
-            {/* 视图菜单 */}
-            <div className="relative">
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`h-8 ${activeMenu === 'view' ? 'bg-accent' : ''}`}
-                onClick={() => handleMenuClick('view')}
-                onMouseEnter={() => handleMenuHover('view')}
-              >
-                视图
-              </Button>
-              {activeMenu === 'view' && renderMenuContent()}
-            </div>
-
-            {/* 分析菜单 */}
-            <div className="relative">
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`h-8 ${activeMenu === 'analysis' ? 'bg-accent' : ''}`}
-                onClick={() => handleMenuClick('analysis')}
-                onMouseEnter={() => handleMenuHover('analysis')}
-              >
-                分析
-              </Button>
-              {activeMenu === 'analysis' && renderMenuContent()}
-            </div>
-          </div>
-        </div>
-
-        {/* 右侧用户和设置 */}
-        <div className="mr-2 flex items-center" ref={rightMenuRef}>
-          {session ? (
-            <div className="relative">
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`h-8 gap-2 ${activeMenu === 'user' ? 'bg-accent' : ''}`}
-                onClick={() => handleMenuClick('user')}
-                onMouseEnter={() => handleMenuHover('user')}
-              >
-                <Avatar className="size-6">
-                  <AvatarFallback>{session.user?.name?.[0] || 'U'}</AvatarFallback>
-                </Avatar>
-                <span>{session.user?.name || '用户'}</span>
-              </Button>
-              {activeMenu === 'user' && renderMenuContent()}
-            </div>
-          ) : null}
-
+    <div className="flex justify-between border-b bg-background min-w-[896px]">
+      <div className="flex items-center">
+        <div className="px-4 py-2 font-semibold text-primary">PSA分析</div>
+        <div className="flex items-center space-x-1 p-1" ref={leftMenuRef}>
+          {/* 文件菜单 */}
           <div className="relative">
             <Button
               variant="ghost"
-              size="icon"
-              className={`ml-2 size-8 ${activeMenu === 'settings' ? 'bg-accent' : ''}`}
-              onClick={() => handleMenuClick('settings')}
-              onMouseEnter={() => handleMenuHover('settings')}
+              size="sm"
+              className={`h-8 ${activeMenu === 'file' ? 'bg-accent' : ''}`}
+              onClick={() => handleMenuClick('file')}
+              onMouseEnter={() => handleMenuHover('file')}
             >
-              <Settings className="size-4" />
+              文件
             </Button>
-            {activeMenu === 'settings' && renderMenuContent()}
+            {activeMenu === 'file' && renderMenuContent()}
+          </div>
+
+          {/* 编辑菜单 */}
+          <div className="relative">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`h-8 ${activeMenu === 'edit' ? 'bg-accent' : ''}`}
+              onClick={() => handleMenuClick('edit')}
+              onMouseEnter={() => handleMenuHover('edit')}
+            >
+              编辑
+            </Button>
+            {activeMenu === 'edit' && renderMenuContent()}
+          </div>
+
+          {/* 视图菜单 */}
+          <div className="relative">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`h-8 ${activeMenu === 'view' ? 'bg-accent' : ''}`}
+              onClick={() => handleMenuClick('view')}
+              onMouseEnter={() => handleMenuHover('view')}
+            >
+              视图
+            </Button>
+            {activeMenu === 'view' && renderMenuContent()}
+          </div>
+
+          {/* 分析菜单 */}
+          <div className="relative">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`h-8 ${activeMenu === 'analysis' ? 'bg-accent' : ''}`}
+              onClick={() => handleMenuClick('analysis')}
+              onMouseEnter={() => handleMenuHover('analysis')}
+            >
+              分析
+            </Button>
+            {activeMenu === 'analysis' && renderMenuContent()}
           </div>
         </div>
       </div>
 
-      {/* 移动端菜单 */}
-      {/* <div className="flex items-center justify-between border-b p-2 md:hidden">
-        <div className="font-semibold text-primary">PSA分析</div>
-        <div className="flex items-center">
-          {session ? (
-            <Avatar className="mr-2 size-7">
-              <AvatarFallback>{session.user?.name?.[0] || 'U'}</AvatarFallback>
-            </Avatar>
-          ) : null}
+      {/* 右侧用户和设置 */}
+      <div className="mr-2 flex items-center" ref={rightMenuRef}>
+        {session ? (
+          <div className="relative">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`h-8 gap-2 ${activeMenu === 'user' ? 'bg-accent' : ''}`}
+              onClick={() => handleMenuClick('user')}
+              onMouseEnter={() => handleMenuHover('user')}
+            >
+              <Avatar className="size-6">
+                <AvatarFallback>{session.user?.name?.[0] || 'U'}</AvatarFallback>
+              </Avatar>
+              <span>{session.user?.name || '用户'}</span>
+            </Button>
+            {activeMenu === 'user' && renderMenuContent()}
+          </div>
+        ) : null}
 
-          <Button variant="ghost" size="icon" className="mr-1 size-8">
+        {/* <div className="relative">
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`ml-2 size-8 ${activeMenu === 'settings' ? 'bg-accent' : ''}`}
+            onClick={() => handleMenuClick('settings')}
+            onMouseEnter={() => handleMenuHover('settings')}
+          >
             <Settings className="size-4" />
           </Button>
-
-          <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-menu"
-            >
-              <line x1="4" x2="20" y1="12" y2="12"></line>
-              <line x1="4" x2="20" y1="6" y2="6"></line>
-              <line x1="4" x2="20" y1="18" y2="18"></line>
-            </svg>
-          </Button>
+          {activeMenu === 'settings' && renderMenuContent()}
         </div> */}
-
-      {/* {mobileMenuOpen && (
-          <div className="absolute inset-x-0 top-12 z-50 border-b bg-background p-2 shadow-lg">
-            <Button variant="ghost" className="mb-1 w-full justify-start" onClick={() => setMobileMenuOpen(false)}>
-              <FileIcon className="mr-2 size-4" />
-              文件
-            </Button>
-            <Button variant="ghost" className="mb-1 w-full justify-start" onClick={() => setMobileMenuOpen(false)}>
-              <Edit className="mr-2 size-4" />
-              编辑
-            </Button>
-            <Button variant="ghost" className="mb-1 w-full justify-start" onClick={() => setMobileMenuOpen(false)}>
-              <Eye className="mr-2 size-4" />
-              视图
-            </Button>
-            <Button variant="ghost" className="mb-1 w-full justify-start" onClick={() => setMobileMenuOpen(false)}>
-              <BarChart className="mr-2 size-4" />
-              分析
-            </Button>
-            {session && (
-              <>
-                <div className="my-1 h-px bg-border" />
-                <Button variant="ghost" className="w-full justify-start" onClick={handleSignOut}>
-                  <LogOut className="mr-2 size-4" />
-                  退出登录
-                </Button>
-              </>
-            )}
-          </div>
-        )} 
-      </div>*/}
-    </>
+      </div>
+    </div>
   );
 }
