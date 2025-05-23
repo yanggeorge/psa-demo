@@ -23,7 +23,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 
 export function Toolbar() {
   return (
-    <div className="flex flex-wrap items-center gap-1 border-b bg-muted/30 p-1">
+    <div className="flex flex-wrap items-center gap-1 border-b bg-muted/30 p-1 min-w-[896px]">
       <TooltipProvider>
         {/* 文件操作 */}
         <Tooltip>

@@ -106,7 +106,7 @@ export function Menu() {
     switch (activeMenu) {
       case 'file':
         return (
-          <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md">
+          <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-md bg-popover p-1 shadow-md min-w-[896px]">
             <Button
               variant="ghost"
               size="sm"
@@ -323,7 +323,7 @@ export function Menu() {
   return (
     <>
       {/* 桌面端水平菜单 */}
-      <div className="hidden justify-between border-b bg-background md:flex">
+      <div className="flex justify-between border-b bg-background min-w-[896px]">
         <div className="flex items-center">
           <div className="px-4 py-2 font-semibold text-primary">PSA分析</div>
           <div className="flex items-center space-x-1 p-1" ref={leftMenuRef}>
@@ -421,7 +421,7 @@ export function Menu() {
       </div>
 
       {/* 移动端菜单 */}
-      <div className="flex items-center justify-between border-b p-2 md:hidden">
+      {/* <div className="flex items-center justify-between border-b p-2 md:hidden">
         <div className="font-semibold text-primary">PSA分析</div>
         <div className="flex items-center">
           {session ? (
@@ -452,9 +452,9 @@ export function Menu() {
               <line x1="4" x2="20" y1="18" y2="18"></line>
             </svg>
           </Button>
-        </div>
+        </div> */}
 
-        {mobileMenuOpen && (
+      {/* {mobileMenuOpen && (
           <div className="absolute inset-x-0 top-12 z-50 border-b bg-background p-2 shadow-lg">
             <Button variant="ghost" className="mb-1 w-full justify-start" onClick={() => setMobileMenuOpen(false)}>
               <FileIcon className="mr-2 size-4" />
@@ -482,8 +482,8 @@ export function Menu() {
               </>
             )}
           </div>
-        )}
-      </div>
+        )} 
+      </div>*/}
     </>
   );
 }
