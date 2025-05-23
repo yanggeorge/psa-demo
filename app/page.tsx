@@ -10,7 +10,7 @@ export default function Home() {
   console.log('🚀 ~ Home begin');
   console.log('🚀 ~ Home end');
   return (
-    <main className="flex h-screen w-screen flex-col overflow-x-auto">
+    <main className="flex h-screen w-screen flex-col overflow-x-scroll">
       <Menu />
       <Toolbar />
       <div className="flex flex-1 overflow-hidden min-w-[896px]">
