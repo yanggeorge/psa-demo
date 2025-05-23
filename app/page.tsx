@@ -10,10 +10,10 @@ export default function Home() {
   console.log('🚀 ~ Home begin');
   console.log('🚀 ~ Home end');
   return (
-    <main className="flex h-screen w-screen flex-col overflow-hidden">
+    <main className="flex h-screen w-screen flex-col overflow-x-auto">
       <Menu />
       <Toolbar />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden min-w-[896px]">
         <ModelElementsSidebar />
         <WorkArea />
         <ReportsSidebar />
